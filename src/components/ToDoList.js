@@ -1,56 +1,24 @@
 import React, { useState } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
 
 const ToDoList = ({ id, color, textValue, setToDoData, toDoData }) => {
   const [isChecked, setIsChecked] = useState(false);
-  const [textareaHeight, setTextareaHeight] = useState({
-    row: 1,
-    lineBreak: {},
-  });
 
   const handleCheckbox = e => {
     setIsChecked(e.target.checked);
   };
 
-  const onInput = e => {
-    const { scrollHeight, clientHeight, value } = e.target;
-
-    const saveTextValue = () => {
-      const findIndex = toDoData.findIndex(ele => ele.id === id);
-      const copyList = [...toDoData];
-      if (findIndex !== -1) {
-        copyList[findIndex] = { ...copyList[findIndex], textValue: value };
-      }
-      setToDoData(copyList);
-    };
-
-    const resizeTextarea = () => {
-      if (scrollHeight > clientHeight) {
-        setTextareaHeight(prev => ({
-          row: prev.row + 1,
-          lineBreak: { ...prev.lineBreak, [value.length - 1]: true },
-        }));
-      }
-
-      if (textareaHeight.lineBreak[value.length]) {
-        setTextareaHeight(prev => ({
-          row: prev.row - 1,
-          lineBreak: { ...prev.lineBreak, [value.length]: false },
-        }));
-      }
-    };
-
-    saveTextValue();
-    resizeTextarea();
-  };
-
-  const onKeyEnter = e => {
-    if (e.code === 'Enter') {
-      setTextareaHeight(prev => ({
-        row: prev.row + 1,
-        lineBreak: { ...prev.lineBreak, [e.target.value.length]: true },
-      }));
+  const saveTextValue = e => {
+    const findIndex = toDoData.findIndex(ele => ele.id === id);
+    const copyList = [...toDoData];
+    if (findIndex !== -1) {
+      copyList[findIndex] = {
+        ...copyList[findIndex],
+        textValue: e.target.value,
+      };
     }
+    setToDoData(copyList);
   };
 
   return (
@@ -59,13 +27,12 @@ const ToDoList = ({ id, color, textValue, setToDoData, toDoData }) => {
         <Checkbox type="checkbox" onInput={handleCheckbox} />
         <StyledCheckbox isChecked={isChecked} color={color} />
       </Label>
-      <InputText
+      <StyledTextareaAutosize
         autoComplete="off"
-        isChecked={isChecked}
-        onInput={onInput}
-        onKeyDown={onKeyEnter}
-        row={textareaHeight.row}
+        onInput={saveTextValue}
         value={textValue}
+        $isChecked={isChecked}
+        $color={color}
       />
     </List>
   );
@@ -92,14 +59,14 @@ export const StyledCheckbox = styled.div`
   border-radius: 50%;
 `;
 
-const InputText = styled.textarea`
+const StyledTextareaAutosize = styled(TextareaAutosize)`
   all: unset;
   display: block;
   width: 100%;
-  height: ${({ row, theme }) => +theme.listSize.slice(0, -2) * row + 4}px;
   border-bottom: 1px solid transparent;
-  color: ${props => (props.isChecked ? props.theme.lightGray : 'unset')};
-  text-decoration: ${props => (props.isChecked ? 'line-through' : 'none')};
+  color: ${props => (props.$isChecked ? props.theme.lightGray : 'unset')};
+  text-decoration: ${props => (props.$isChecked ? 'line-through' : 'none')};
+  line-height: 1.2;
   overflow-wrap: break-word;
   word-break: break-all;
   white-space: pre-wrap;
@@ -107,6 +74,11 @@ const InputText = styled.textarea`
 
   &:focus {
     border-bottom: 1px solid ${({ theme }) => theme.lightGray};
+  }
+
+  &::selection {
+    background-color: ${({ $color }) => $color};
+    color: ${({ theme }) => theme.floralWhite};
   }
 `;
 
