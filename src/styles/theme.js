@@ -18,7 +18,7 @@ const theme = {
     purple: '#786fa6',
     pencil: '#596275',
   },
-  listSize: '16px',
+  listSize: 16,
 
   flexCustom: (alignItems, justifyContent, flexDirection) => css`
     display: flex;

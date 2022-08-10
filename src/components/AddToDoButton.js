@@ -13,16 +13,23 @@ const AddToDoButton = ({ randomColor, addNewToDo }) => {
 };
 
 const Container = styled.div`
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
   ${({ theme }) => theme.flexCustom()}
+  width: fit-content;
+  transform: translateX(-50%);
 `;
 
 const StyledButton = styled.button`
-  padding: 8px 12px;
+  padding: 12px 16px;
   background-color: ${({ randomColor }) => randomColor};
   color: ${({ theme }) => theme.floralWhite};
   border: none;
-  border-radius: ${({ theme }) => theme.listSize.slice(0, -2) / 2 + 8}px;
+  border-radius: ${({ theme }) => theme.listSize / 2 + 16}px;
   text-align: center;
+  font-size: ${props => props.theme.listSize + 4}px;
+  cursor: pointer;
 `;
 
 const StyledIcon = styled.i`

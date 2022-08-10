@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { useDrag } from 'react-dnd';
 import styled from 'styled-components';
+import { ItemTypes } from '../utils/itemTypes';
 
-const ToDoList = ({ id, color, textValue, setToDoData, toDoData }) => {
-  const [isChecked, setIsChecked] = useState(false);
+const ToDoList = props => {
+  const {
+    id,
+    color,
+    textValue,
+    isCompleted,
+    setToDoData,
+    toDoData,
+    className,
+    style,
+  } = props;
 
   const handleCheckbox = e => {
-    setIsChecked(e.target.checked);
+    const findIndex = toDoData.findIndex(ele => ele.id === id);
+    const copyList = [...toDoData];
+    if (findIndex !== -1) {
+      copyList[findIndex] = {
+        ...copyList[findIndex],
+        isCompleted: e.target.checked,
+      };
+      setToDoData(copyList);
+    }
   };
 
   const saveTextValue = e => {
@@ -17,21 +36,44 @@ const ToDoList = ({ id, color, textValue, setToDoData, toDoData }) => {
         ...copyList[findIndex],
         textValue: e.target.value,
       };
+      setToDoData(copyList);
     }
-    setToDoData(copyList);
   };
 
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.TODO,
+    item: { id },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        setToDoData(prev => [...prev].filter(ele => ele.id !== item.id));
+      }
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
   return (
-    <List>
+    <List
+      ref={drag}
+      className={className}
+      style={style}
+      isDragging={isDragging}
+    >
       <Label>
-        <Checkbox type="checkbox" onInput={handleCheckbox} />
-        <StyledCheckbox isChecked={isChecked} color={color} />
+        <Checkbox
+          type="checkbox"
+          onChange={handleCheckbox}
+          checked={isCompleted}
+        />
+        <StyledCheckbox isCompleted={isCompleted} color={color} />
       </Label>
       <StyledTextareaAutosize
         autoComplete="off"
         onInput={saveTextValue}
         value={textValue}
-        $isChecked={isChecked}
+        $isCompleted={isCompleted}
         $color={color}
       />
     </List>
@@ -41,6 +83,7 @@ const ToDoList = ({ id, color, textValue, setToDoData, toDoData }) => {
 const List = styled.li`
   ${({ theme }) => theme.flexCustom('flex-start')}
   margin: 8px 0;
+  opacity: ${({ isDragging }) => (isDragging ? 0.5 : 'inherit')};
   list-style: none;
 `;
 
@@ -50,11 +93,13 @@ const Checkbox = styled.input`
 
 const Label = styled.label``;
 
-export const StyledCheckbox = styled.div`
+const StyledCheckbox = styled.div`
+  margin-top: ${props => props.theme.listSize * 0.1 - 1}px;
   margin-right: 8px;
-  width: 16px;
-  height: 16px;
-  background-color: ${props => (props.isChecked ? props.color : 'transparent')};
+  width: ${props => props.theme.listSize}px;
+  height: ${props => props.theme.listSize}px;
+  background-color: ${props =>
+    props.isCompleted ? props.color : 'transparent'};
   border: 2px solid ${props => props.color};
   border-radius: 50%;
 `;
@@ -64,12 +109,13 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   display: block;
   width: 100%;
   border-bottom: 1px solid transparent;
-  color: ${props => (props.$isChecked ? props.theme.lightGray : 'unset')};
-  text-decoration: ${props => (props.$isChecked ? 'line-through' : 'none')};
+  color: ${props => (props.$isCompleted ? props.theme.lightGray : 'unset')};
+  text-decoration: ${props => (props.$isCompleted ? 'line-through' : 'none')};
   line-height: 1.2;
   overflow-wrap: break-word;
   word-break: break-all;
   white-space: pre-wrap;
+  overflow: hidden;
   resize: none;
 
   &:focus {
