@@ -30,6 +30,10 @@ const StyledButton = styled.button`
   text-align: center;
   font-size: ${props => props.theme.listSize + 4}px;
   cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+  }
 `;
 
 const StyledIcon = styled.i`

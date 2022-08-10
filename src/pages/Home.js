@@ -4,6 +4,7 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import styled from 'styled-components';
 import ToDoList from '../components/ToDoList';
 import DragLayerPreview from '../components/DragLayerPreview';
+import CompletionConfetti from '../components/CompletionConfetti';
 import theme from '../styles/theme';
 
 const Home = () => {
@@ -19,6 +20,10 @@ const Home = () => {
   useEffect(() => {
     localStorage.setItem('toDoList', JSON.stringify(toDoData));
   }, [toDoData]);
+
+  const isAllCompleted = toDoData
+    .map(ele => ele?.isCompleted)
+    .every(ele => ele);
 
   const colorValues = Object.values(theme.random);
   const randomColor =
@@ -60,6 +65,7 @@ const Home = () => {
           />
         </ToDoListWrapper>
       </Container>
+      {isAllCompleted ? <CompletionConfetti /> : null}
     </DndProvider>
   );
 };
@@ -67,7 +73,7 @@ const Home = () => {
 const Container = styled.div`
   position: relative;
   ${({ theme }) => theme.flexCustom('center', 'initial', 'column')}
-  margin: 20px;
+  padding: 20px;
 `;
 
 const ToDoListWrapper = styled.div`
