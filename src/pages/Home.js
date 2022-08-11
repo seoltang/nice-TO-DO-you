@@ -9,6 +9,7 @@ import theme from '../styles/theme';
 
 const Home = () => {
   const [toDoData, setToDoData] = useState([]);
+  const [randomColor, setRandomColor] = useState(null);
 
   useEffect(() => {
     const data = localStorage.getItem('toDoList');
@@ -21,13 +22,14 @@ const Home = () => {
     localStorage.setItem('toDoList', JSON.stringify(toDoData));
   }, [toDoData]);
 
+  useEffect(() => {
+    const colorValues = Object.values(theme.random);
+    setRandomColor(colorValues[Math.floor(Math.random() * colorValues.length)]);
+  }, [toDoData.length]);
+
   const isAllCompleted = toDoData
     .map(ele => ele?.isCompleted)
     .every(ele => ele);
-
-  const colorValues = Object.values(theme.random);
-  const randomColor =
-    colorValues[Math.floor(Math.random() * colorValues.length)];
 
   const addNewToDo = () => {
     setToDoData(prev => [
