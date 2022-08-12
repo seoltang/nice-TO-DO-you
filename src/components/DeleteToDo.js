@@ -5,9 +5,9 @@ import { ItemTypes } from '../utils/itemTypes';
 import theme from '../styles/theme';
 
 const DeleteToDo = ({ toDoData }) => {
-  const [{ isOver, id, canDrop }, drop] = useDrop(() => ({
+  const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
     accept: ItemTypes.TODO,
-    drop: () => ({ name: 'Dustbin' }),
+    drop: () => ({ delete: true }),
     collect: monitor => ({
       isOver: monitor.isOver(),
       id: monitor.getItem()?.id,
@@ -35,7 +35,7 @@ const DeleteToDo = ({ toDoData }) => {
   return canDrop ? (
     <Container>
       <TrashCan
-        ref={drop}
+        ref={dropRef}
         isOver={isOver}
         isCompleted={isCompleted}
         color={color}
@@ -69,7 +69,6 @@ const TrashCan = styled.div`
   border-radius: 50%;
   font-size: ${({ theme }) => theme.listSize + 8}px;
   transform: ${({ isOver }) => (isOver ? 'scale(1.25)' : 'none')};
-  /* transform-origin: left; */
 `;
 
 export default DeleteToDo;

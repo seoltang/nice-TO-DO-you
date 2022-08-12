@@ -1,5 +1,6 @@
 import React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
+import { Draggable } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
 import styled from 'styled-components';
 import { ItemTypes } from '../utils/itemTypes';
@@ -7,45 +8,46 @@ import { ItemTypes } from '../utils/itemTypes';
 const ToDoList = props => {
   const {
     id,
+    index,
     color,
     textValue,
     isCompleted,
     setToDoData,
     toDoData,
     className,
-    style,
   } = props;
 
   const handleCheckbox = e => {
     const findIndex = toDoData.findIndex(ele => ele.id === id);
-    const copyList = [...toDoData];
+    const copyData = [...toDoData];
     if (findIndex !== -1) {
-      copyList[findIndex] = {
-        ...copyList[findIndex],
+      copyData[findIndex] = {
+        ...copyData[findIndex],
         isCompleted: e.target.checked,
       };
-      setToDoData(copyList);
+      setToDoData(copyData);
     }
   };
 
   const saveTextValue = e => {
     const findIndex = toDoData.findIndex(ele => ele.id === id);
-    const copyList = [...toDoData];
+    const copyData = [...toDoData];
     if (findIndex !== -1) {
-      copyList[findIndex] = {
-        ...copyList[findIndex],
+      copyData[findIndex] = {
+        ...copyData[findIndex],
         textValue: e.target.value,
       };
-      setToDoData(copyList);
+      setToDoData(copyData);
     }
   };
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, dragRef] = useDrag(() => ({
     type: ItemTypes.TODO,
-    item: { id },
+    item: { id, index },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
-      if (item && dropResult) {
+
+      if (item && dropResult?.delete) {
         setToDoData(prev => [...prev].filter(ele => ele.id !== item.id));
       }
     },
@@ -54,30 +56,35 @@ const ToDoList = props => {
     }),
   }));
 
-  return (
-    <List
-      ref={drag}
-      className={className}
-      style={style}
-      isDragging={isDragging}
-    >
-      <Label>
-        <Checkbox
-          type="checkbox"
-          onChange={handleCheckbox}
-          checked={isCompleted}
-        />
-        <StyledCheckbox isCompleted={isCompleted} color={color} />
-      </Label>
-      <StyledTextareaAutosize
-        autoComplete="off"
-        onInput={saveTextValue}
-        value={textValue}
-        $isCompleted={isCompleted}
-        $color={color}
-      />
-    </List>
-  );
+  return index ? (
+    <Draggable draggableId={`todo${id}`} index={index}>
+      {provided => (
+        <List
+          className={className}
+          isDragging={isDragging}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <Label ref={dragRef}>
+            <Checkbox
+              type="checkbox"
+              onChange={handleCheckbox}
+              checked={isCompleted}
+            />
+            <StyledCheckbox isCompleted={isCompleted} color={color} />
+          </Label>
+          <StyledTextareaAutosize
+            autoComplete="off"
+            onInput={saveTextValue}
+            value={textValue}
+            $isCompleted={isCompleted}
+            $color={color}
+          />
+        </List>
+      )}
+    </Draggable>
+  ) : null;
 };
 
 const List = styled.li`

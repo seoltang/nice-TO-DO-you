@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import ToDoList from '../components/ToDoList';
 import DragLayerPreview from '../components/DragLayerPreview';
@@ -43,29 +44,59 @@ const Home = () => {
     ]);
   };
 
+  const reorder = useCallback((list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  }, []);
+
+  function onDragEnd({ source, destination }) {
+    if (!destination) return;
+    if (destination.index === source.index) return;
+
+    setToDoData(prevToDoData =>
+      reorder(prevToDoData, source.index, destination.index)
+    );
+  }
+
   return (
     <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
       <Container>
-        <ToDoListWrapper>
-          {toDoData.length === 0
-            ? null
-            : toDoData.map(({ id, color, textValue, isCompleted }) => (
-                <ToDoList
-                  key={id}
-                  id={id}
-                  color={color}
-                  textValue={textValue}
-                  isCompleted={isCompleted}
-                  setToDoData={setToDoData}
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="todo">
+            {provided => (
+              <ToDoListWrapper
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {toDoData.length === 0
+                  ? null
+                  : toDoData.map(
+                      ({ id, color, textValue, isCompleted }, index) => (
+                        <ToDoList
+                          key={id}
+                          id={id}
+                          index={index}
+                          color={color}
+                          textValue={textValue}
+                          isCompleted={isCompleted}
+                          setToDoData={setToDoData}
+                          toDoData={toDoData}
+                        />
+                      )
+                    )}
+                {provided.placeholder}
+                <DragLayerPreview
                   toDoData={toDoData}
+                  randomColor={randomColor}
+                  addNewToDo={addNewToDo}
                 />
-              ))}
-          <DragLayerPreview
-            toDoData={toDoData}
-            randomColor={randomColor}
-            addNewToDo={addNewToDo}
-          />
-        </ToDoListWrapper>
+              </ToDoListWrapper>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Container>
       {isAllCompleted ? <CompletionConfetti /> : null}
     </DndProvider>
