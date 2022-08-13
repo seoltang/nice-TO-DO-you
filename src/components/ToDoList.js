@@ -14,6 +14,8 @@ const ToDoList = props => {
     isCompleted,
     setToDoData,
     toDoData,
+    deletedId,
+    isEditMode,
     className,
   } = props;
 
@@ -43,37 +45,48 @@ const ToDoList = props => {
 
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: ItemTypes.TODO,
-    item: { id, index },
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-
-      if (item && dropResult?.delete) {
-        setToDoData(prev => [...prev].filter(ele => ele.id !== item.id));
-      }
-    },
+    item: { id },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
   }));
 
+  const preventDeleteAnimation = (style, snapshot, id) => {
+    if (snapshot.isDropAnimating && id === deletedId) {
+      const { moveTo } = snapshot.dropAnimation;
+      return {
+        ...style,
+        transform: `translate(${moveTo.x}px, ${moveTo.y}px)`,
+        transitionDuration: '0.000001s',
+        visibility: 'hidden',
+      };
+    }
+    return style;
+  };
+
   return Number.isInteger(index) ? (
-    <Draggable draggableId={`todo${id}`} index={index}>
-      {provided => (
+    <Draggable draggableId={`${id}`} index={index} isDragDisabled={!isEditMode}>
+      {(provided, snapshot) => (
         <List
           className={className}
           isDragging={isDragging}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          style={preventDeleteAnimation(
+            provided.draggableProps.style,
+            snapshot,
+            id
+          )}
         >
-          <Label ref={dragRef}>
+          <label ref={dragRef}>
             <Checkbox
               type="checkbox"
               onChange={handleCheckbox}
               checked={isCompleted}
             />
             <StyledCheckbox isCompleted={isCompleted} color={color} />
-          </Label>
+          </label>
           <StyledTextareaAutosize
             autoComplete="off"
             onInput={saveTextValue}
@@ -89,16 +102,14 @@ const ToDoList = props => {
 
 const List = styled.li`
   ${({ theme }) => theme.flexCustom('flex-start')}
-  margin: 8px 0;
-  opacity: ${({ isDragging }) => (isDragging ? 0.5 : 'inherit')};
+  padding: 6px 0;
+  /* opacity: ${({ isDragging }) => (isDragging ? 0.5 : 'inherit')}; */
   list-style: none;
 `;
 
 const Checkbox = styled.input`
   display: none;
 `;
-
-const Label = styled.label``;
 
 const StyledCheckbox = styled.div`
   margin-top: ${props => props.theme.listSize * 0.1 - 1}px;

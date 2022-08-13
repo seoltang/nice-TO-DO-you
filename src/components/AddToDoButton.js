@@ -2,7 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
-const AddToDoButton = ({ randomColor, addNewToDo }) => {
+const AddToDoButton = ({ randomColor, setToDoData }) => {
+  const addNewToDo = () => {
+    setToDoData(prev => [
+      ...prev,
+      {
+        id: prev.length ? Math.max(...prev.map(ele => ele.id)) + 1 : 0,
+        color: randomColor,
+        textValue: '',
+        isCompleted: false,
+      },
+    ]);
+  };
+
   return (
     <Container>
       <StyledButton

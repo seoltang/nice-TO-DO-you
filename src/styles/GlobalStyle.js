@@ -8,6 +8,10 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     font-size: ${props => props.theme.listSize}px;
   }
+
+  #rbd-announcement-0 {
+    display: none;
+  }
 `;
 
 export default GlobalStyle;

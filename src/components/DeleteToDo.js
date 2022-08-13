@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import { ItemTypes } from '../utils/itemTypes';
 import theme from '../styles/theme';
 
-const DeleteToDo = ({ toDoData }) => {
+const DeleteToDo = ({ toDoData, setDeletedId }) => {
   const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
     accept: ItemTypes.TODO,
-    drop: () => ({ delete: true }),
+    drop: ({ id }) => {
+      setDeletedId(id);
+    },
     collect: monitor => ({
       isOver: monitor.isOver(),
       id: monitor.getItem()?.id,
@@ -15,9 +17,10 @@ const DeleteToDo = ({ toDoData }) => {
     }),
   }));
 
-  const { isCompleted, color } = toDoData.find(ele => ele.id === id) || {};
+  const getTrashCanColor = (isOver, draggingId) => {
+    const { isCompleted, color } =
+      toDoData.find(ele => ele.id === draggingId) || {};
 
-  const getTrashCanColor = (isOver, isCompleted, color) => {
     let colorStyles = { backgroundColor: null, fontColor: null };
     if (isOver && isCompleted) {
       colorStyles.backgroundColor = color;
@@ -37,8 +40,7 @@ const DeleteToDo = ({ toDoData }) => {
       <TrashCan
         ref={dropRef}
         isOver={isOver}
-        isCompleted={isCompleted}
-        color={color}
+        id={id}
         getTrashCanColor={getTrashCanColor}
       >
         <i className="fa-regular fa-trash-can" />
@@ -59,13 +61,13 @@ const TrashCan = styled.div`
   ${({ theme }) => theme.flexCustom()}
   width: 72px;
   height: 72px;
-  background-color: ${({ isOver, isCompleted, color, getTrashCanColor }) =>
-    getTrashCanColor(isOver, isCompleted, color).backgroundColor};
-  color: ${({ isOver, isCompleted, color, getTrashCanColor }) =>
-    getTrashCanColor(isOver, isCompleted, color).fontColor};
+  background-color: ${({ isOver, id, getTrashCanColor }) =>
+    getTrashCanColor(isOver, id).backgroundColor};
+  color: ${({ isOver, id, getTrashCanColor }) =>
+    getTrashCanColor(isOver, id).fontColor};
   border: 2px solid
-    ${({ isOver, isCompleted, color, getTrashCanColor }) =>
-      getTrashCanColor(isOver, isCompleted, color).fontColor};
+    ${({ isOver, id, getTrashCanColor }) =>
+      getTrashCanColor(isOver, id).fontColor};
   border-radius: 50%;
   font-size: ${({ theme }) => theme.listSize + 8}px;
   transform: ${({ isOver }) => (isOver ? 'scale(1.25)' : 'none')};
