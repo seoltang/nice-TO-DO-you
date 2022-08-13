@@ -56,7 +56,7 @@ const ToDoList = props => {
     }),
   }));
 
-  return index ? (
+  return Number.isInteger(index) ? (
     <Draggable draggableId={`todo${id}`} index={index}>
       {provided => (
         <List
