@@ -1,10 +1,10 @@
 import React from 'react';
 
-const EditButton = ({ setIsEditMode }) => {
+const EditButton = ({ setisEditModeOn }) => {
   return (
     <button
       onClick={() => {
-        setIsEditMode(prev => !prev);
+        setisEditModeOn(prev => !prev);
       }}
     >
       Edit

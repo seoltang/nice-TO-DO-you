@@ -15,7 +15,7 @@ const ToDoList = props => {
     setToDoData,
     toDoData,
     deletedId,
-    isEditMode,
+    isEditModeOn,
     className,
   } = props;
 
@@ -65,7 +65,11 @@ const ToDoList = props => {
   };
 
   return Number.isInteger(index) ? (
-    <Draggable draggableId={`${id}`} index={index} isDragDisabled={!isEditMode}>
+    <Draggable
+      draggableId={`${id}`}
+      index={index}
+      isDragDisabled={!isEditModeOn}
+    >
       {(provided, snapshot) => (
         <List
           className={className}

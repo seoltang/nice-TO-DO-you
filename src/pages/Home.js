@@ -13,7 +13,7 @@ import theme from '../styles/theme';
 const Home = () => {
   const [toDoData, setToDoData] = useState([]);
   const [randomColor, setRandomColor] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState(null);
 
   useEffect(() => {
@@ -32,9 +32,8 @@ const Home = () => {
     setRandomColor(colorValues[Math.floor(Math.random() * colorValues.length)]);
   }, [toDoData.length]);
 
-  const isAllCompleted = toDoData
-    .map(ele => ele?.isCompleted)
-    .every(ele => ele);
+  const isAllCompleted =
+    toDoData.length && toDoData.map(ele => ele.isCompleted).every(ele => ele);
 
   const reorder = useCallback((list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -62,7 +61,7 @@ const Home = () => {
   return (
     <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
       <Container>
-        <EditButton setIsEditMode={setIsEditMode} />
+        <EditButton setisEditModeOn={setisEditModeOn} />
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="todo">
             {provided => (
@@ -70,9 +69,8 @@ const Home = () => {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                {toDoData.length === 0
-                  ? null
-                  : toDoData.map(
+                {toDoData.length
+                  ? toDoData.map(
                       ({ id, color, textValue, isCompleted }, index) => (
                         <ToDoList
                           key={id}
@@ -84,16 +82,17 @@ const Home = () => {
                           setToDoData={setToDoData}
                           toDoData={toDoData}
                           deletedId={deletedId}
-                          isEditMode={isEditMode}
+                          isEditModeOn={isEditModeOn}
                         />
                       )
-                    )}
+                    )
+                  : null}
                 {provided.placeholder}
               </ToDoListWrapper>
             )}
           </Droppable>
         </DragDropContext>
-        {isEditMode ? (
+        {isEditModeOn ? (
           <DeleteToDo
             toDoData={toDoData}
             setToDoData={setToDoData}
