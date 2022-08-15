@@ -3,6 +3,7 @@ import { css } from 'styled-components';
 const theme = {
   floralWhite: '#FFFAF0',
   lightGray: '#D3D3D3',
+  ink: '#303952',
   tomato: '#FF6347',
   random: {
     rose: '#e66767',

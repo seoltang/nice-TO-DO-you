@@ -7,10 +7,11 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${props => props.theme.floralWhite};
     font-family: 'Noto Sans KR', sans-serif;
     font-size: ${props => props.theme.listSize}px;
+    pointer-events: none;
   }
 
-  #rbd-announcement-0 {
-    display: none;
+  #root {
+    pointer-events: auto;
   }
 `;
 

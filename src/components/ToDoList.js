@@ -83,14 +83,35 @@ const ToDoList = props => {
             id
           )}
         >
-          <label ref={dragRef}>
-            <Checkbox
-              type="checkbox"
-              onChange={handleCheckbox}
-              checked={isCompleted}
-            />
-            <StyledCheckbox isCompleted={isCompleted} color={color} />
-          </label>
+          <CheckboxWrapper>
+            {isEditModeOn ? (
+              <StyledCheckbox
+                ref={dragRef}
+                color={color}
+                isCompleted={isCompleted}
+                isEditModeOn={isEditModeOn}
+              >
+                <GripIcon
+                  color={color}
+                  isCompleted={isCompleted}
+                  className="fa-solid fa-grip-lines"
+                />
+              </StyledCheckbox>
+            ) : (
+              <label>
+                <Checkbox
+                  type="checkbox"
+                  onChange={handleCheckbox}
+                  checked={isCompleted}
+                />
+                <StyledCheckbox
+                  color={color}
+                  isCompleted={isCompleted}
+                  isEditModeOn={isEditModeOn}
+                />
+              </label>
+            )}
+          </CheckboxWrapper>
           <StyledTextareaAutosize
             autoComplete="off"
             onInput={saveTextValue}
@@ -115,14 +136,19 @@ const Checkbox = styled.input`
   display: none;
 `;
 
-const StyledCheckbox = styled.div`
+const CheckboxWrapper = styled.div`
   margin-top: ${props => props.theme.listSize * 0.1 - 1}px;
   margin-right: 8px;
+`;
+
+const StyledCheckbox = styled.div`
+  ${({ theme }) => theme.flexCustom()}
   width: ${props => props.theme.listSize}px;
   height: ${props => props.theme.listSize}px;
   background-color: ${props =>
-    props.isCompleted ? props.color : 'transparent'};
-  border: 2px solid ${props => props.color};
+    props.isCompleted && !props.isEditModeOn ? props.color : 'transparent'};
+  border: 2px solid
+    ${props => (props.isEditModeOn ? 'transparent' : props.color)};
   border-radius: 50%;
 `;
 
@@ -148,6 +174,11 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
     background-color: ${({ $color }) => $color};
     color: ${({ theme }) => theme.floralWhite};
   }
+`;
+
+const GripIcon = styled.i`
+  color: ${({ color }) => color};
+  font-size: ${props => props.theme.listSize}px;
 `;
 
 export default ToDoList;
