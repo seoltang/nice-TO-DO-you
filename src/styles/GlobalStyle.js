@@ -3,6 +3,11 @@ import reset from 'styled-reset';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
+
+  * {
+    box-sizing: border-box;
+  }
+
 	body {
     background-color: ${props => props.theme.floralWhite};
     font-family: 'Noto Sans KR', sans-serif;

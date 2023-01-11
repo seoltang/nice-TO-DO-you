@@ -8,13 +8,14 @@ const EditButton = ({ setisEditModeOn }) => {
         setisEditModeOn(prev => !prev);
       }}
     >
-      <i class="fa-regular fa-pen-to-square" />
+      <i className="fa-regular fa-pen-to-square" />
     </StyledButton>
   );
 };
 
 const StyledButton = styled.button`
   all: unset;
+  align-self: flex-end;
   cursor: pointer;
 
   i {

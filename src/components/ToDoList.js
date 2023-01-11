@@ -4,6 +4,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
 import styled from 'styled-components';
 import { ItemTypes } from '../utils/itemTypes';
+import theme from '../styles/theme';
 
 const ToDoList = props => {
   const {
@@ -126,7 +127,7 @@ const ToDoList = props => {
 };
 
 const List = styled.li`
-  ${({ theme }) => theme.flexCustom('flex-start')}
+  ${theme.flexCustom('flex-start')}
   padding: 6px 0;
   /* opacity: ${({ isDragging }) => (isDragging ? 0.5 : 'inherit')}; */
   list-style: none;
@@ -137,14 +138,14 @@ const Checkbox = styled.input`
 `;
 
 const CheckboxWrapper = styled.div`
-  margin-top: ${props => props.theme.listSize * 0.1 - 1}px;
+  margin-top: ${theme.listSize * 0.1 - 1}px;
   margin-right: 8px;
 `;
 
 const StyledCheckbox = styled.div`
-  ${({ theme }) => theme.flexCustom()}
-  width: ${props => props.theme.listSize}px;
-  height: ${props => props.theme.listSize}px;
+  ${theme.flexCustom()}
+  width: ${theme.listSize + 4}px;
+  height: ${theme.listSize + 4}px;
   background-color: ${props =>
     props.isCompleted && !props.isEditModeOn ? props.color : 'transparent'};
   border: 2px solid
@@ -167,18 +168,18 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   resize: none;
 
   &:focus {
-    border-bottom: 1px solid ${({ theme }) => theme.lightGray};
+    border-bottom: 1px solid ${theme.lightGray};
   }
 
   &::selection {
     background-color: ${({ $color }) => $color};
-    color: ${({ theme }) => theme.floralWhite};
+    color: ${theme.floralWhite};
   }
 `;
 
 const GripIcon = styled.i`
   color: ${({ color }) => color};
-  font-size: ${props => props.theme.listSize}px;
+  font-size: ${theme.listSize}px;
 `;
 
 export default ToDoList;

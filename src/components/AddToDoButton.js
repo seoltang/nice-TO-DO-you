@@ -42,6 +42,7 @@ const Container = styled.div`
 
 const StyledButton = styled(motion.button)`
   padding: 12px 16px;
+  width: max-content;
   background-color: ${({ $randomColor }) => $randomColor};
   color: ${({ theme }) => theme.floralWhite};
   border: none;

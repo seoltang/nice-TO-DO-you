@@ -60,58 +60,74 @@ const Home = () => {
 
   return (
     <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
-      <Container>
-        <EditButton setisEditModeOn={setisEditModeOn} />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="todo">
-            {provided => (
-              <ToDoListWrapper
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {toDoData.length
-                  ? toDoData.map(
-                      ({ id, color, textValue, isCompleted }, index) => (
-                        <ToDoList
-                          key={id}
-                          id={id}
-                          index={index}
-                          color={color}
-                          textValue={textValue}
-                          isCompleted={isCompleted}
-                          setToDoData={setToDoData}
-                          toDoData={toDoData}
-                          deletedId={deletedId}
-                          isEditModeOn={isEditModeOn}
-                        />
+      <PageContainer>
+        <FlexContainer>
+          <EditButton setisEditModeOn={setisEditModeOn} />
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="todo">
+              {provided => (
+                <ToDoListWrapper
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {toDoData.length
+                    ? toDoData.map(
+                        ({ id, color, textValue, isCompleted }, index) => (
+                          <ToDoList
+                            key={id}
+                            id={id}
+                            index={index}
+                            color={color}
+                            textValue={textValue}
+                            isCompleted={isCompleted}
+                            setToDoData={setToDoData}
+                            toDoData={toDoData}
+                            deletedId={deletedId}
+                            isEditModeOn={isEditModeOn}
+                          />
+                        )
                       )
-                    )
-                  : null}
-                {provided.placeholder}
-              </ToDoListWrapper>
-            )}
-          </Droppable>
-        </DragDropContext>
-        {isEditModeOn ? (
-          <DeleteToDo
-            toDoData={toDoData}
-            setToDoData={setToDoData}
-            setDeletedId={setDeletedId}
-          />
-        ) : (
-          <AddToDoButton randomColor={randomColor} setToDoData={setToDoData} />
-        )}
-      </Container>
+                    : null}
+                  {provided.placeholder}
+                </ToDoListWrapper>
+              )}
+            </Droppable>
+          </DragDropContext>
+          {isEditModeOn ? (
+            <DeleteToDo
+              toDoData={toDoData}
+              setToDoData={setToDoData}
+              setDeletedId={setDeletedId}
+            />
+          ) : (
+            <AddToDoButton
+              randomColor={randomColor}
+              setToDoData={setToDoData}
+            />
+          )}
+        </FlexContainer>
+      </PageContainer>
       {isAllCompleted ? <CompletionConfetti /> : null}
     </DndProvider>
   );
 };
 
-const Container = styled.div`
+const PageContainer = styled.div`
   position: relative;
-  ${({ theme }) => theme.flexCustom('center', 'initial', 'column')}
+  ${theme.flexCustom('center', 'flex-start', 'column')}
+  background-color: ${theme.lemonCream};
+`;
+
+const FlexContainer = styled.div`
+  ${theme.flexCustom('center', 'initial', 'column')}
   padding: 20px;
-  padding-bottom: ${({ theme }) => theme.listSize * 1.2 + 80}px;
+  padding-bottom: ${theme.listSize * 1.2 + 80}px;
+  min-height: 100vh;
+  max-width: 1024px;
+  width: 100%;
+  background-color: ${theme.floralWhite};
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
 `;
 
 const ToDoListWrapper = styled.div`
