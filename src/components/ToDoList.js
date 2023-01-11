@@ -28,6 +28,7 @@ const ToDoList = props => {
         ...copyData[findIndex],
         isCompleted: e.target.checked,
       };
+
       setToDoData(copyData);
     }
   };
@@ -40,6 +41,7 @@ const ToDoList = props => {
         ...copyData[findIndex],
         textValue: e.target.value,
       };
+
       setToDoData(copyData);
     }
   };
@@ -84,10 +86,9 @@ const ToDoList = props => {
             id
           )}
         >
-          <CheckboxWrapper>
-            {isEditModeOn ? (
+          {isEditModeOn ? (
+            <CheckboxWrapper ref={dragRef}>
               <StyledCheckbox
-                ref={dragRef}
                 color={color}
                 isCompleted={isCompleted}
                 isEditModeOn={isEditModeOn}
@@ -98,7 +99,9 @@ const ToDoList = props => {
                   className="fa-solid fa-grip-lines"
                 />
               </StyledCheckbox>
-            ) : (
+            </CheckboxWrapper>
+          ) : (
+            <CheckboxWrapper>
               <label>
                 <Checkbox
                   type="checkbox"
@@ -111,8 +114,9 @@ const ToDoList = props => {
                   isEditModeOn={isEditModeOn}
                 />
               </label>
-            )}
-          </CheckboxWrapper>
+            </CheckboxWrapper>
+          )}
+
           <StyledTextareaAutosize
             autoComplete="off"
             onInput={saveTextValue}
@@ -128,8 +132,7 @@ const ToDoList = props => {
 
 const List = styled.li`
   ${theme.flexCustom('flex-start')}
-  padding: 6px 0;
-  /* opacity: ${({ isDragging }) => (isDragging ? 0.5 : 'inherit')}; */
+  margin-bottom: 12px;
   list-style: none;
 `;
 
@@ -138,8 +141,8 @@ const Checkbox = styled.input`
 `;
 
 const CheckboxWrapper = styled.div`
-  margin-top: ${theme.listSize * 0.1 - 1}px;
-  margin-right: 8px;
+  padding-top: 1px;
+  padding-right: 8px;
 `;
 
 const StyledCheckbox = styled.div`
