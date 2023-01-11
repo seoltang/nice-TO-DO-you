@@ -1,6 +1,14 @@
 import { css } from 'styled-components';
 
+const size = {
+  mobile: '767px',
+  desktop: '768px',
+};
+
 const theme = {
+  mobile: `(max-width: ${size.mobile})`,
+  desktop: `(min-width: ${size.desktop})`,
+
   floralWhite: '#FFFAF0',
   lemonCream: '#faf0ca',
   lightGray: '#D3D3D3',
@@ -34,6 +42,7 @@ const theme = {
     purple: '#9370DB',
     pencil: '#596275',
   },
+
   listSize: 16,
 
   flexCustom: (alignItems, justifyContent, flexDirection) => css`

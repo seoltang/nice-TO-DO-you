@@ -115,19 +115,25 @@ const Home = () => {
 const PageContainer = styled.div`
   position: relative;
   ${theme.flexCustom('center', 'flex-start', 'column')}
-  background-color: ${theme.lemonCream};
+
+  @media ${theme.desktop} {
+    background-color: ${theme.lemonCream};
+  }
 `;
 
 const FlexContainer = styled.div`
   ${theme.flexCustom('center', 'initial', 'column')}
   padding: 20px;
   padding-bottom: ${theme.listSize * 1.2 + 80}px;
-  min-height: 100vh;
-  max-width: 1024px;
   width: 100%;
-  background-color: ${theme.floralWhite};
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  @media ${theme.desktop} {
+    max-width: 1024px;
+    min-height: 100vh;
+    background-color: ${theme.floralWhite};
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
 `;
 
 const ToDoListWrapper = styled.div`
