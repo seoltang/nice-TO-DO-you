@@ -32,5 +32,4 @@
 
 <img src="https://img.shields.io/static/v1?label=React&message=18.2.0&color=61DAFB&style=for-the-badge&logo=react" />
 
-<img src="https://img.shields.io/static/v1?label=styled-components
-&message=5.3.6&color=DB7093&style=for-the-badge&logo=styled-components" />
+<img src="https://img.shields.io/static/v1?label=styled-components&message=5.3.6&color=DB7093&style=for-the-badge&logo=styled-components" />
