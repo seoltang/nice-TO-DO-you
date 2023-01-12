@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ItemTypes } from '../utils/itemTypes';
 import theme from '../styles/theme';
 
-const DeleteToDo = ({ toDoData, setDeletedId }) => {
+const DeleteToDo = ({ toDos, setDeletedId }) => {
   const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
     accept: ItemTypes.TODO,
     drop: ({ id }) => {
@@ -19,7 +19,7 @@ const DeleteToDo = ({ toDoData, setDeletedId }) => {
 
   const getTrashCanColor = (isOver, draggingId) => {
     const { isCompleted, color } =
-      toDoData.find(ele => ele.id === draggingId) || {};
+      toDos.find(ele => ele.id === draggingId) || {};
 
     let colorStyles = { backgroundColor: null, fontColor: null };
     if (isOver && isCompleted) {

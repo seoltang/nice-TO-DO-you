@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
-const AddToDoButton = ({ randomColor, setToDoData }) => {
+const AddToDoButton = ({ randomColor, setToDos }) => {
   const addNewToDo = () => {
-    setToDoData(prev => [
+    setToDos(prev => [
       ...prev,
       {
         id: prev.length ? Math.max(...prev.map(ele => ele.id)) + 1 : 0,

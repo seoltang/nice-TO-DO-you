@@ -8,32 +8,33 @@ import EditButton from '../components/EditButton';
 import AddToDoButton from '../components/AddToDoButton';
 import DeleteToDo from '../components/DeleteToDo';
 import CompletionConfetti from '../components/CompletionConfetti';
+import { TODO_KEY_NAME } from '../config';
 import theme from '../styles/theme';
 
 const Home = () => {
-  const [toDoData, setToDoData] = useState([]);
+  const [toDos, setToDos] = useState([]);
   const [randomColor, setRandomColor] = useState(null);
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem('toDoList');
-    if (data) {
-      setToDoData(JSON.parse(data));
+    const savedToDos = localStorage.getItem(TODO_KEY_NAME);
+    if (savedToDos) {
+      setToDos(JSON.parse(savedToDos));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('toDoList', JSON.stringify(toDoData));
-  }, [toDoData]);
+    localStorage.setItem(TODO_KEY_NAME, JSON.stringify(toDos));
+  }, [toDos]);
 
   useEffect(() => {
     const colorValues = Object.values(theme.random);
     setRandomColor(colorValues[Math.floor(Math.random() * colorValues.length)]);
-  }, [toDoData.length]);
+  }, [toDos.length]);
 
   const isAllCompleted =
-    toDoData.length && toDoData.map(ele => ele.isCompleted).every(ele => ele);
+    toDos.length && toDos.map(ele => ele.isCompleted).every(ele => ele);
 
   const reorder = useCallback((list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -44,17 +45,15 @@ const Home = () => {
 
   const onDragEnd = result => {
     if (deletedId === +result.draggableId) {
-      setToDoData(prevToDoData =>
-        [...prevToDoData].filter(ele => ele.id !== deletedId)
-      );
+      setToDos(prevtoDos => [...prevtoDos].filter(ele => ele.id !== deletedId));
       return;
     }
 
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
 
-    setToDoData(prevToDoData =>
-      reorder(prevToDoData, result.source.index, result.destination.index)
+    setToDos(prevtoDos =>
+      reorder(prevtoDos, result.source.index, result.destination.index)
     );
   };
 
@@ -63,6 +62,7 @@ const Home = () => {
       <PageContainer>
         <FlexContainer>
           <EditButton setisEditModeOn={setisEditModeOn} />
+
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="todo">
               {provided => (
@@ -70,8 +70,8 @@ const Home = () => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {toDoData.length
-                    ? toDoData.map(
+                  {toDos.length
+                    ? toDos.map(
                         ({ id, color, textValue, isCompleted }, index) => (
                           <ToDoList
                             key={id}
@@ -80,8 +80,8 @@ const Home = () => {
                             color={color}
                             textValue={textValue}
                             isCompleted={isCompleted}
-                            setToDoData={setToDoData}
-                            toDoData={toDoData}
+                            setToDos={setToDos}
+                            toDos={toDos}
                             deletedId={deletedId}
                             isEditModeOn={isEditModeOn}
                           />
@@ -93,17 +93,15 @@ const Home = () => {
               )}
             </Droppable>
           </DragDropContext>
+
           {isEditModeOn ? (
             <DeleteToDo
-              toDoData={toDoData}
-              setToDoData={setToDoData}
+              toDos={toDos}
+              setToDos={setToDos}
               setDeletedId={setDeletedId}
             />
           ) : (
-            <AddToDoButton
-              randomColor={randomColor}
-              setToDoData={setToDoData}
-            />
+            <AddToDoButton randomColor={randomColor} setToDos={setToDos} />
           )}
         </FlexContainer>
       </PageContainer>

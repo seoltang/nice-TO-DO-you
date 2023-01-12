@@ -13,36 +13,38 @@ const ToDoList = props => {
     color,
     textValue,
     isCompleted,
-    setToDoData,
-    toDoData,
+    setToDos,
+    toDos,
     deletedId,
     isEditModeOn,
     className,
   } = props;
 
   const handleCheckbox = e => {
-    const findIndex = toDoData.findIndex(ele => ele.id === id);
-    const copyData = [...toDoData];
+    const findIndex = toDos.findIndex(toDo => toDo.id === id);
+    const copyToDos = [...toDos];
+
     if (findIndex !== -1) {
-      copyData[findIndex] = {
-        ...copyData[findIndex],
+      copyToDos[findIndex] = {
+        ...copyToDos[findIndex],
         isCompleted: e.target.checked,
       };
 
-      setToDoData(copyData);
+      setToDos(copyToDos);
     }
   };
 
   const saveTextValue = e => {
-    const findIndex = toDoData.findIndex(ele => ele.id === id);
-    const copyData = [...toDoData];
+    const findIndex = toDos.findIndex(toDo => toDo.id === id);
+    const copyToDos = [...toDos];
+
     if (findIndex !== -1) {
-      copyData[findIndex] = {
-        ...copyData[findIndex],
+      copyToDos[findIndex] = {
+        ...copyToDos[findIndex],
         textValue: e.target.value,
       };
 
-      setToDoData(copyData);
+      setToDos(copyToDos);
     }
   };
 
