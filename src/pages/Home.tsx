@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import {
@@ -7,6 +8,8 @@ import {
   type DropResult,
 } from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
 import ToDoList from '../components/ToDoList';
 import EditButton from '../components/EditButton';
 import AddToDoButton from '../components/AddToDoButton';
@@ -22,7 +25,15 @@ const Home = () => {
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) return;
+
+      navigate('/login');
+    });
+
     const savedToDos = localStorage.getItem(TODO_KEY_NAME);
     if (savedToDos) {
       setToDos(JSON.parse(savedToDos));
