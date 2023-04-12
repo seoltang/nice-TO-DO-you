@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
+import theme from './theme';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -9,9 +10,9 @@ const GlobalStyle = createGlobalStyle`
   }
 
 	body {
-    background-color: ${props => props.theme.floralWhite};
+    background-color: ${theme.color.floralWhite};
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: ${props => props.theme.listSize}px;
+    font-size: ${theme.listSize}px;
     pointer-events: none;
   }
 

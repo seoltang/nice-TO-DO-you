@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import {
+  DragDropContext,
+  Droppable,
+  type DropResult,
+} from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import ToDoList from '../components/ToDoList';
 import EditButton from '../components/EditButton';
@@ -10,12 +14,13 @@ import DeleteToDo from '../components/DeleteToDo';
 import CompletionConfetti from '../components/CompletionConfetti';
 import { TODO_KEY_NAME } from '../config';
 import theme from '../styles/theme';
+import type { ToDoType } from '../types/todo';
 
 const Home = () => {
-  const [toDos, setToDos] = useState([]);
+  const [toDos, setToDos] = useState<ToDoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
-  const [deletedId, setDeletedId] = useState(null);
+  const [deletedId, setDeletedId] = useState<number | null>(null);
 
   useEffect(() => {
     const savedToDos = localStorage.getItem(TODO_KEY_NAME);
@@ -29,31 +34,36 @@ const Home = () => {
   }, [toDos]);
 
   useEffect(() => {
-    const colorValues = Object.values(theme.random);
+    const colorValues = Object.values(theme.color.random);
     setRandomColor(colorValues[Math.floor(Math.random() * colorValues.length)]);
   }, [toDos.length]);
 
   const isAllCompleted =
-    toDos.length && toDos.map(ele => ele.isCompleted).every(ele => ele);
+    toDos.length && toDos.map((ele) => ele.isCompleted).every((ele) => ele);
 
-  const reorder = useCallback((list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  }, []);
+  const reorder = useCallback(
+    (list: ToDoType[], startIndex: number, endIndex: number) => {
+      const result = Array.from(list);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    },
+    []
+  );
 
-  const onDragEnd = result => {
+  const onDragEnd = (result: DropResult) => {
     if (deletedId === +result.draggableId) {
-      setToDos(prevtoDos => [...prevtoDos].filter(ele => ele.id !== deletedId));
+      setToDos((prevtoDos) =>
+        [...prevtoDos].filter((ele) => ele.id !== deletedId)
+      );
       return;
     }
 
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
 
-    setToDos(prevtoDos =>
-      reorder(prevtoDos, result.source.index, result.destination.index)
+    setToDos((prevtoDos) =>
+      reorder(prevtoDos, result.source.index, result.destination!.index)
     );
   };
 
@@ -65,7 +75,7 @@ const Home = () => {
 
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="todo">
-              {provided => (
+              {(provided) => (
                 <ToDoListWrapper
                   ref={provided.innerRef}
                   {...provided.droppableProps}
@@ -95,11 +105,7 @@ const Home = () => {
           </DragDropContext>
 
           {isEditModeOn ? (
-            <DeleteToDo
-              toDos={toDos}
-              setToDos={setToDos}
-              setDeletedId={setDeletedId}
-            />
+            <DeleteToDo toDos={toDos} setDeletedId={setDeletedId} />
           ) : (
             <AddToDoButton randomColor={randomColor} setToDos={setToDos} />
           )}
@@ -115,7 +121,7 @@ const PageContainer = styled.div`
   ${theme.flexCustom('center', 'flex-start', 'column')}
 
   @media ${theme.desktop} {
-    background-color: ${theme.lemonCream};
+    background-color: ${theme.color.lemonCream};
   }
 `;
 
@@ -128,7 +134,7 @@ const FlexContainer = styled.div`
   @media ${theme.desktop} {
     max-width: 1024px;
     min-height: 100vh;
-    background-color: ${theme.floralWhite};
+    background-color: ${theme.color.floralWhite};
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
       0 8px 10px -6px rgb(0 0 0 / 0.1);
   }

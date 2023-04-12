@@ -1,47 +1,61 @@
 import React from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable, type DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
 import styled from 'styled-components';
 import { ItemTypes } from '../utils/itemTypes';
 import theme from '../styles/theme';
+import type { ToDoType } from '../types/todo';
 
-const ToDoList = props => {
-  const {
-    id,
-    index,
-    color,
-    textValue,
-    isCompleted,
-    setToDos,
-    toDos,
-    deletedId,
-    isEditModeOn,
-    className,
-  } = props;
+type ToDoListProps = {
+  id: number;
+  index: number;
+  color: string;
+  textValue: string;
+  isCompleted: boolean;
+  setToDos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
+  toDos: ToDoType[];
+  deletedId: number | null;
+  isEditModeOn: boolean;
+};
 
-  const handleCheckbox = e => {
-    const findIndex = toDos.findIndex(toDo => toDo.id === id);
+type ListProps = {
+  isDragging: boolean;
+};
+
+const ToDoList = ({
+  id,
+  index,
+  color,
+  textValue,
+  isCompleted,
+  setToDos,
+  toDos,
+  deletedId,
+  isEditModeOn,
+}: ToDoListProps) => {
+  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const findIndex = toDos.findIndex((toDo) => toDo.id === id);
     const copyToDos = [...toDos];
 
     if (findIndex !== -1) {
       copyToDos[findIndex] = {
         ...copyToDos[findIndex],
-        isCompleted: e.target.checked,
+        isCompleted: event.target.checked,
       };
 
       setToDos(copyToDos);
     }
   };
 
-  const saveTextValue = e => {
-    const findIndex = toDos.findIndex(toDo => toDo.id === id);
+  const saveTextValue = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const findIndex = toDos.findIndex((toDo) => toDo.id === id);
     const copyToDos = [...toDos];
 
     if (findIndex !== -1) {
       copyToDos[findIndex] = {
         ...copyToDos[findIndex],
-        textValue: e.target.value,
+        textValue: event.currentTarget.value,
       };
 
       setToDos(copyToDos);
@@ -51,33 +65,36 @@ const ToDoList = props => {
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: ItemTypes.TODO,
     item: { id },
-    collect: monitor => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   }));
 
-  const preventDeleteAnimation = (style, snapshot, id) => {
+  const preventDeleteAnimation = (
+    style: React.CSSProperties | undefined,
+    snapshot: DraggableStateSnapshot,
+    id: number
+  ) => {
     if (snapshot.isDropAnimating && id === deletedId) {
-      const { moveTo } = snapshot.dropAnimation;
+      const { moveTo } = snapshot.dropAnimation!;
       return {
         ...style,
         transform: `translate(${moveTo.x}px, ${moveTo.y}px)`,
         transitionDuration: '0.000001s',
         visibility: 'hidden',
-      };
+      } as React.CSSProperties;
     }
     return style;
   };
 
   return Number.isInteger(index) ? (
     <Draggable
-      draggableId={`${id}`}
+      draggableId={`todo-${id}`}
       index={index}
       isDragDisabled={!isEditModeOn}
     >
       {(provided, snapshot) => (
         <List
-          className={className}
           isDragging={isDragging}
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -95,11 +112,7 @@ const ToDoList = props => {
                 isCompleted={isCompleted}
                 isEditModeOn={isEditModeOn}
               >
-                <GripIcon
-                  color={color}
-                  isCompleted={isCompleted}
-                  className="fa-solid fa-grip-lines"
-                />
+                <GripIcon color={color} className="fa-solid fa-grip-lines" />
               </StyledCheckbox>
             </CheckboxWrapper>
           ) : (
@@ -132,7 +145,17 @@ const ToDoList = props => {
   ) : null;
 };
 
-const List = styled.li`
+type StyledCheckboxProps = {
+  isCompleted: boolean;
+  isEditModeOn: boolean;
+};
+
+type StyledTextareaAutosizeProps = {
+  $isCompleted: boolean;
+  $color: string;
+};
+
+const List = styled.li<ListProps>`
   ${theme.flexCustom('flex-start')}
   margin-bottom: 12px;
   list-style: none;
@@ -147,24 +170,27 @@ const CheckboxWrapper = styled.div`
   padding-right: 8px;
 `;
 
-const StyledCheckbox = styled.div`
+const StyledCheckbox = styled.div<StyledCheckboxProps>`
   ${theme.flexCustom()}
   width: ${theme.listSize + 4}px;
   height: ${theme.listSize + 4}px;
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.isCompleted && !props.isEditModeOn ? props.color : 'transparent'};
   border: 2px solid
-    ${props => (props.isEditModeOn ? 'transparent' : props.color)};
+    ${(props) => (props.isEditModeOn ? 'transparent' : props.color)};
   border-radius: 50%;
 `;
 
-const StyledTextareaAutosize = styled(TextareaAutosize)`
+const StyledTextareaAutosize = styled(
+  TextareaAutosize
+)<StyledTextareaAutosizeProps>`
   all: unset;
   display: block;
   width: 100%;
   border-bottom: 1px solid transparent;
-  color: ${props => (props.$isCompleted ? props.theme.lightGray : 'unset')};
-  text-decoration: ${props => (props.$isCompleted ? 'line-through' : 'none')};
+  color: ${(props) =>
+    props.$isCompleted ? props.theme.color.lightGray : 'unset'};
+  text-decoration: ${(props) => (props.$isCompleted ? 'line-through' : 'none')};
   line-height: 1.2;
   overflow-wrap: break-word;
   word-break: break-all;
@@ -173,12 +199,12 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
   resize: none;
 
   &:focus {
-    border-bottom: 1px solid ${theme.lightGray};
+    border-bottom: 1px solid ${theme.color.lightGray};
   }
 
   &::selection {
     background-color: ${({ $color }) => $color};
-    color: ${theme.floralWhite};
+    color: ${theme.color.floralWhite};
   }
 `;
 

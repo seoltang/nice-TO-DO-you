@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const EditButton = ({ setisEditModeOn }) => {
+type EditButtonProps = {
+  setisEditModeOn: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const EditButton = ({ setisEditModeOn }: EditButtonProps) => {
   return (
     <StyledButton
       onClick={() => {
-        setisEditModeOn(prev => !prev);
+        setisEditModeOn((prev) => !prev);
       }}
     >
       <i className="fa-regular fa-pen-to-square" />
@@ -19,7 +23,7 @@ const StyledButton = styled.button`
   cursor: pointer;
 
   i {
-    color: ${({ theme }) => theme.ink};
+    color: ${({ theme }) => theme.color.ink};
   }
 `;
 
