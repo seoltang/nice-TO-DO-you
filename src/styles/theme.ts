@@ -45,9 +45,13 @@ const theme = {
 
   listSize: 16,
 
-  flexCustom: (alignItems, justifyContent, flexDirection) => css`
+  flexCustom: (
+    alignItems?: string,
+    justifyContent?: string,
+    flexDirection?: string
+  ) => css`
     display: flex;
-    flex-direction: ${flexDirection || 'initial'};
+    flex-direction: ${flexDirection || 'row'};
     align-items: ${alignItems || 'center'};
     justify-content: ${justifyContent || 'center'};
   `,

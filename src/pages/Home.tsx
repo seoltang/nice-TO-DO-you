@@ -13,7 +13,7 @@ import theme from '../styles/theme';
 
 const Home = () => {
   const [toDos, setToDos] = useState([]);
-  const [randomColor, setRandomColor] = useState(null);
+  const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState(null);
 

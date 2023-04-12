@@ -21,7 +21,7 @@ const DeleteToDo = ({ toDos, setDeletedId }) => {
     const { isCompleted, color } =
       toDos.find(ele => ele.id === draggingId) || {};
 
-    let colorStyles = { backgroundColor: null, fontColor: null };
+    let colorStyles = { backgroundColor: '', fontColor: '' };
     if (isOver && isCompleted) {
       colorStyles.backgroundColor = color;
       colorStyles.fontColor = theme.floralWhite;
