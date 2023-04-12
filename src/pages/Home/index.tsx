@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
@@ -14,21 +14,33 @@ import EditButton from '@components/EditButton';
 import AddToDoButton from '@components/AddToDoButton';
 import DeleteToDo from '@components/DeleteToDo';
 import CompletionConfetti from '@components/CompletionConfetti';
+import UserButton from '@components/UserButton';
 import { TODO_KEY_NAME } from '@constants/todo';
 import theme from '@styles/theme';
-import { PageContainer, FlexContainer, ToDoListWrapper } from './style';
+import { PageContainer, FlexContainer, ToDoListWrapper, Nav } from './style';
+import userIcon from '@assets/image/logo/user.png';
 
 const Home = () => {
   const [toDos, setToDos] = useState<ToDoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState<number | null>(null);
+  const [user, setUser] = useState({ name: '', imageURL: userIcon });
 
   const navigate = useNavigate();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) return;
+      if (user) {
+        const { displayName, photoURL } = user;
+
+        setUser({
+          name: displayName || '사용자',
+          imageURL: photoURL || userIcon,
+        });
+
+        return;
+      }
 
       navigate('/login');
     });
@@ -81,7 +93,10 @@ const Home = () => {
     <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
       <PageContainer>
         <FlexContainer>
-          <EditButton setisEditModeOn={setisEditModeOn} />
+          <Nav>
+            <EditButton setisEditModeOn={setisEditModeOn} />
+            <UserButton imageURL={user.imageURL} />
+          </Nav>
 
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="todo">

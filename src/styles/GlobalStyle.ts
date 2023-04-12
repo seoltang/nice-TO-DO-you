@@ -1,9 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import resetStyle from './resetStyle';
 import theme from './theme';
 
 const GlobalStyle = createGlobalStyle`
-  ${reset}
+  ${resetStyle}
+
+  #root {
+    pointer-events: auto;
+  }
 
   * {
     box-sizing: border-box;
@@ -14,10 +18,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     font-size: ${theme.listSize}px;
     pointer-events: none;
-  }
-
-  #root {
-    pointer-events: auto;
   }
 `;
 

@@ -16,7 +16,7 @@ type StyledTextareaAutosizeProps = {
 };
 
 export const List = styled.li<ListProps>`
-  ${({ theme }) => theme.flexCustom('flex-start')}
+  ${({ theme }) => theme.flexCustom('row', 'flex-start')}
   margin-bottom: 12px;
   list-style: none;
 `;
@@ -39,6 +39,7 @@ export const StyledCheckbox = styled.div<StyledCheckboxProps>`
   border: 2px solid
     ${(props) => (props.isEditModeOn ? 'transparent' : props.color)};
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 export const StyledTextareaAutosize = styled(
@@ -49,7 +50,9 @@ export const StyledTextareaAutosize = styled(
   width: 100%;
   border-bottom: 1px solid transparent;
   color: ${(props) =>
-    props.$isCompleted ? props.theme.color.lightGray : 'unset'};
+    props.$isCompleted
+      ? props.theme.color.gray[300]
+      : props.theme.color.gray[900]};
   text-decoration: ${(props) => (props.$isCompleted ? 'line-through' : 'none')};
   line-height: 1.2;
   overflow-wrap: break-word;
@@ -59,7 +62,7 @@ export const StyledTextareaAutosize = styled(
   resize: none;
 
   &:focus {
-    border-bottom: 1px solid ${({ theme }) => theme.color.lightGray};
+    border-bottom: 1px solid ${({ theme }) => theme.color.gray[300]};
   }
 
   &::selection {

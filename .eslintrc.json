@@ -5,12 +5,5 @@
   "extends": ["plugin:prettier/recommended"],
   "env": {
     "browser": true
-  },
-  "settings": {
-    "import/resolver": {
-      "alias": {
-        "map": [["@src", "./src"]]
-      }
-    }
   }
 }

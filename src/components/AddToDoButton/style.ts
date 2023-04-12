@@ -20,10 +20,10 @@ export const StyledButton = styled(motion.button)<StyledButtonProps>`
   background-color: ${({ $randomColor }) => $randomColor};
   color: ${({ theme }) => theme.color.floralWhite};
   border: none;
-  border-radius: ${({ theme }) => theme.listSize / 2 + 16}px;
+  border-radius: 48px;
   text-align: center;
-  font-size: ${(props) => props.theme.listSize + 4}px;
-  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
 `;
 
 export const StyledIcon = styled.i`
