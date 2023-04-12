@@ -1,11 +1,16 @@
 import React from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
 import { Draggable, type DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
-import styled from 'styled-components';
-import { ItemTypes } from '../utils/itemTypes';
-import theme from '../styles/theme';
-import type { ToDoType } from '../types/todo';
+import { ItemTypes } from '../../utils/itemTypes';
+import type { ToDoType } from '../../types/todo';
+import {
+  List,
+  CheckboxWrapper,
+  StyledCheckbox,
+  GripIcon,
+  Checkbox,
+  StyledTextareaAutosize,
+} from './style';
 
 type ToDoListProps = {
   id: number;
@@ -17,10 +22,6 @@ type ToDoListProps = {
   toDos: ToDoType[];
   deletedId: number | null;
   isEditModeOn: boolean;
-};
-
-type ListProps = {
-  isDragging: boolean;
 };
 
 const ToDoList = ({
@@ -144,73 +145,5 @@ const ToDoList = ({
     </Draggable>
   ) : null;
 };
-
-type StyledCheckboxProps = {
-  isCompleted: boolean;
-  isEditModeOn: boolean;
-};
-
-type StyledTextareaAutosizeProps = {
-  $isCompleted: boolean;
-  $color: string;
-};
-
-const List = styled.li<ListProps>`
-  ${theme.flexCustom('flex-start')}
-  margin-bottom: 12px;
-  list-style: none;
-`;
-
-const Checkbox = styled.input`
-  display: none;
-`;
-
-const CheckboxWrapper = styled.div`
-  padding-top: 1px;
-  padding-right: 8px;
-`;
-
-const StyledCheckbox = styled.div<StyledCheckboxProps>`
-  ${theme.flexCustom()}
-  width: ${theme.listSize + 4}px;
-  height: ${theme.listSize + 4}px;
-  background-color: ${(props) =>
-    props.isCompleted && !props.isEditModeOn ? props.color : 'transparent'};
-  border: 2px solid
-    ${(props) => (props.isEditModeOn ? 'transparent' : props.color)};
-  border-radius: 50%;
-`;
-
-const StyledTextareaAutosize = styled(
-  TextareaAutosize
-)<StyledTextareaAutosizeProps>`
-  all: unset;
-  display: block;
-  width: 100%;
-  border-bottom: 1px solid transparent;
-  color: ${(props) =>
-    props.$isCompleted ? props.theme.color.lightGray : 'unset'};
-  text-decoration: ${(props) => (props.$isCompleted ? 'line-through' : 'none')};
-  line-height: 1.2;
-  overflow-wrap: break-word;
-  word-break: break-all;
-  white-space: pre-wrap;
-  overflow: hidden;
-  resize: none;
-
-  &:focus {
-    border-bottom: 1px solid ${theme.color.lightGray};
-  }
-
-  &::selection {
-    background-color: ${({ $color }) => $color};
-    color: ${theme.color.floralWhite};
-  }
-`;
-
-const GripIcon = styled.i`
-  color: ${({ color }) => color};
-  font-size: ${theme.listSize}px;
-`;
 
 export default ToDoList;

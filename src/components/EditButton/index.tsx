@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import { StyledButton } from './style';
 
 type EditButtonProps = {
   setisEditModeOn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,15 +16,5 @@ const EditButton = ({ setisEditModeOn }: EditButtonProps) => {
     </StyledButton>
   );
 };
-
-const StyledButton = styled.button`
-  all: unset;
-  align-self: flex-end;
-  cursor: pointer;
-
-  i {
-    color: ${({ theme }) => theme.color.ink};
-  }
-`;
 
 export default EditButton;

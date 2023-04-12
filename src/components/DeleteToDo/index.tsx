@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import styled from 'styled-components';
-import { ItemTypes } from '../utils/itemTypes';
-import theme from '../styles/theme';
-import type { ToDoType } from '../types/todo';
+import { ItemTypes } from '../../utils/itemTypes';
+import theme from '../../styles/theme';
+import type { ToDoType } from '../../types/todo';
+import { Container, TrashCan } from './style';
 
 type DeleteToDoProps = {
   toDos: ToDoType[];
@@ -54,41 +54,5 @@ const DeleteToDo = ({ toDos, setDeletedId }: DeleteToDoProps) => {
     </Container>
   ) : null;
 };
-
-type TrashCanProps = {
-  isOver: boolean;
-  draggingId: number;
-  getTrashCanColor: (
-    isOver: boolean,
-    id: number
-  ) => {
-    backgroundColor: string;
-    fontColor: string;
-  };
-};
-
-const Container = styled.div`
-  position: fixed;
-  bottom: 48px;
-  left: 50%;
-  ${({ theme }) => theme.flexCustom()}
-  transform: translateX(-50%);
-`;
-
-const TrashCan = styled.div<TrashCanProps>`
-  ${({ theme }) => theme.flexCustom()}
-  width: 72px;
-  height: 72px;
-  background-color: ${({ isOver, draggingId, getTrashCanColor }) =>
-    getTrashCanColor(isOver, draggingId).backgroundColor};
-  color: ${({ isOver, draggingId, getTrashCanColor }) =>
-    getTrashCanColor(isOver, draggingId).fontColor};
-  border: 2px solid
-    ${({ isOver, draggingId, getTrashCanColor }) =>
-      getTrashCanColor(isOver, draggingId).fontColor};
-  border-radius: 50%;
-  font-size: ${({ theme }) => theme.listSize + 8}px;
-  transform: ${({ isOver }) => (isOver ? 'scale(1.25)' : 'none')};
-`;
 
 export default DeleteToDo;

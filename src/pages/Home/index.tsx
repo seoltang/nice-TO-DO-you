@@ -7,17 +7,17 @@ import {
   Droppable,
   type DropResult,
 } from 'react-beautiful-dnd';
-import styled from 'styled-components';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
-import ToDoList from '../components/ToDoList';
-import EditButton from '../components/EditButton';
-import AddToDoButton from '../components/AddToDoButton';
-import DeleteToDo from '../components/DeleteToDo';
-import CompletionConfetti from '../components/CompletionConfetti';
-import { TODO_KEY_NAME } from '../config';
-import theme from '../styles/theme';
-import type { ToDoType } from '../types/todo';
+import { auth } from '../../firebase';
+import ToDoList from '../../components/ToDoList';
+import EditButton from '../../components/EditButton';
+import AddToDoButton from '../../components/AddToDoButton';
+import DeleteToDo from '../../components/DeleteToDo';
+import CompletionConfetti from '../../components/CompletionConfetti';
+import { TODO_KEY_NAME } from '../../config';
+import theme from '../../styles/theme';
+import type { ToDoType } from '../../types/todo';
+import { PageContainer, FlexContainer, ToDoListWrapper } from './style';
 
 const Home = () => {
   const [toDos, setToDos] = useState<ToDoType[]>([]);
@@ -126,34 +126,5 @@ const Home = () => {
     </DndProvider>
   );
 };
-
-const PageContainer = styled.div`
-  position: relative;
-  ${theme.flexCustom('center', 'flex-start', 'column')}
-
-  @media ${theme.desktop} {
-    background-color: ${theme.color.lemonCream};
-  }
-`;
-
-const FlexContainer = styled.div`
-  ${theme.flexCustom('center', 'initial', 'column')}
-  padding: 20px;
-  padding-bottom: ${theme.listSize * 1.2 + 80}px;
-  width: 100%;
-
-  @media ${theme.desktop} {
-    max-width: 1024px;
-    min-height: 100vh;
-    background-color: ${theme.color.floralWhite};
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-      0 8px 10px -6px rgb(0 0 0 / 0.1);
-  }
-`;
-
-const ToDoListWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
 export default Home;
