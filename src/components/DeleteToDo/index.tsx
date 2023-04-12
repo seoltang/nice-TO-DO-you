@@ -1,8 +1,7 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from '../../utils/itemTypes';
-import theme from '../../styles/theme';
-import type { ToDoType } from '../../types/todo';
+import { ItemTypes } from '@constants/todo';
+import theme from '@styles/theme';
 import { Container, TrashCan } from './style';
 
 type DeleteToDoProps = {

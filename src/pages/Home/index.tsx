@@ -8,15 +8,14 @@ import {
   type DropResult,
 } from 'react-beautiful-dnd';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
-import ToDoList from '../../components/ToDoList';
-import EditButton from '../../components/EditButton';
-import AddToDoButton from '../../components/AddToDoButton';
-import DeleteToDo from '../../components/DeleteToDo';
-import CompletionConfetti from '../../components/CompletionConfetti';
-import { TODO_KEY_NAME } from '../../config';
-import theme from '../../styles/theme';
-import type { ToDoType } from '../../types/todo';
+import { auth } from 'src/firebase';
+import ToDoList from '@components/ToDoList';
+import EditButton from '@components/EditButton';
+import AddToDoButton from '@components/AddToDoButton';
+import DeleteToDo from '@components/DeleteToDo';
+import CompletionConfetti from '@components/CompletionConfetti';
+import { TODO_KEY_NAME } from '@constants/todo';
+import theme from '@styles/theme';
 import { PageContainer, FlexContainer, ToDoListWrapper } from './style';
 
 const Home = () => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import type { ToDoType } from '../../types/todo';
 import { Container, StyledButton, StyledIcon } from './style';
 
 type AddToDoButtonProps = {

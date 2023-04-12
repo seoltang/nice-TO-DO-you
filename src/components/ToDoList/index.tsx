@@ -1,8 +1,7 @@
 import React from 'react';
 import { Draggable, type DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
-import { ItemTypes } from '../../utils/itemTypes';
-import type { ToDoType } from '../../types/todo';
+import { ItemTypes } from '@constants/todo';
 import {
   List,
   CheckboxWrapper,

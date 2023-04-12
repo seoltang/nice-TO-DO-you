@@ -1,7 +1,7 @@
 import React from 'react';
 import Confetti from 'react-confetti';
-import useWindowSize from '../../hooks/useWindowSize';
-import theme from '../../styles/theme';
+import useWindowSize from '@hooks/useWindowSize';
+import theme from '@styles/theme';
 
 const CompletionConfetti = () => {
   const { width, height } = useWindowSize();
