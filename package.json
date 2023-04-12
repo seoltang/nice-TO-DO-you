@@ -21,7 +21,6 @@
     "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.2",
-    "react-scripts": "^5.0.1",
     "react-textarea-autosize": "^8.4.0",
     "styled-components": "^5.3.6",
     "styled-reset": "^4.4.5",
@@ -29,10 +28,9 @@
     "web-vitals": "^3.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -55,9 +53,13 @@
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/styled-components": "^5.1.26",
+    "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.7",
+    "vite": "^4.2.1",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.2.0"
   }
 }
