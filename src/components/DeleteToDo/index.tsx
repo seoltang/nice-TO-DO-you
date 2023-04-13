@@ -17,26 +17,28 @@ const DeleteToDo = ({ todos, setDeletedId }: DeleteToDoProps) => {
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      id: (monitor.getItem() as { id: string })?.id,
+      id: (monitor.getItem() as { id: string } | null)?.id,
       canDrop: monitor.canDrop(),
     }),
   }));
 
-  const getTrashCanColor = (isOver: boolean, draggingId: string) => {
-    const { isCompleted, color } =
-      todos.find((ele) => ele.id === draggingId) || {};
+  const getTrashCanColor = (
+    isOver: boolean,
+    draggingId: string | undefined
+  ) => {
+    const { floralWhite, tomato } = theme.color;
+    const colorStyles = { backgroundColor: floralWhite, fontColor: tomato };
 
-    let colorStyles = { backgroundColor: '', fontColor: '' };
-    if (isOver && isCompleted && color) {
-      colorStyles.backgroundColor = color;
-      colorStyles.fontColor = theme.color.floralWhite;
-    } else if (isOver && color) {
-      colorStyles.backgroundColor = theme.color.floralWhite;
-      colorStyles.fontColor = color;
-    } else {
-      colorStyles.backgroundColor = theme.color.floralWhite;
-      colorStyles.fontColor = theme.color.tomato;
+    if (!draggingId) return colorStyles;
+    const todo = todos.find((ele) => ele.id === draggingId);
+    if (!todo) return colorStyles;
+    const { isCompleted, color } = todo;
+
+    if (isOver) {
+      colorStyles.backgroundColor = isCompleted ? color : floralWhite;
+      colorStyles.fontColor = isCompleted ? floralWhite : color;
     }
+
     return colorStyles;
   };
 

@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 type TrashCanProps = {
   isOver: boolean;
-  draggingId: string;
+  draggingId: string | undefined;
   getTrashCanColor: (
     isOver: boolean,
-    id: string
+    draggingId: string | undefined
   ) => {
     backgroundColor: string;
     fontColor: string;
