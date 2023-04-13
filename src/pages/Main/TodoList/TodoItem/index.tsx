@@ -12,14 +12,14 @@ import {
   StyledTextareaAutosize,
 } from './style';
 
-type ToDoListProps = {
+type TodoListProps = {
   id: string;
   index: number;
   color: string;
   textValue: string;
   isCompleted: boolean;
-  setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
-  todos: ToDoType[];
+  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
+  todos: TodoType[];
   deletedId: string | null;
   isEditModeOn: boolean;
 };
@@ -34,13 +34,13 @@ const TodoItem = ({
   todos,
   deletedId,
   isEditModeOn,
-}: ToDoListProps) => {
+}: TodoListProps) => {
   const handleCheckbox = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const isCompleted = target.checked;
 
     updateTodos(todos);
 
-    function updateTodos(todos: ToDoType[]) {
+    function updateTodos(todos: TodoType[]) {
       const findIndex = todos.findIndex((todo) => todo.id === id);
       const updatedTodos = [...todos];
 
@@ -65,7 +65,7 @@ const TodoItem = ({
     updateTodos(todos);
     setTodos(updateTodos);
 
-    function updateTodos(todos: ToDoType[]) {
+    function updateTodos(todos: TodoType[]) {
       const findIndex = todos.findIndex((todo) => todo.id === id);
       const updatedTodos = [...todos];
 

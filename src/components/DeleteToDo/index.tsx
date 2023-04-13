@@ -4,12 +4,12 @@ import { ItemTypes } from '@constants/todo';
 import theme from '@styles/theme';
 import { Container, TrashCan } from './style';
 
-type DeleteToDoProps = {
-  todos: ToDoType[];
+type DeleteTodoProps = {
+  todos: TodoType[];
   setDeletedId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const DeleteToDo = ({ todos, setDeletedId }: DeleteToDoProps) => {
+const DeleteTodo = ({ todos, setDeletedId }: DeleteTodoProps) => {
   const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
     accept: ItemTypes.TODO,
     drop: ({ id }) => {
@@ -56,4 +56,4 @@ const DeleteToDo = ({ todos, setDeletedId }: DeleteToDoProps) => {
   ) : null;
 };
 
-export default DeleteToDo;
+export default DeleteTodo;

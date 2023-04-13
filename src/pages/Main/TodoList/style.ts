@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ToDoListWrapper = styled.div`
+export const TodoListWrapper = styled.div`
   width: 100%;
   height: 100%;
 `;

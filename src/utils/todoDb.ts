@@ -34,7 +34,7 @@ class TodoDb {
     return [];
   }
 
-  listen(setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>) {
+  listen(setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>) {
     onSnapshot(this.#docRef, (doc) => {
       if (doc.exists()) {
         const todos = doc.data().todos;
@@ -43,7 +43,7 @@ class TodoDb {
     });
   }
 
-  async create(newTodo: ToDoType) {
+  async create(newTodo: TodoType) {
     const todos = await this.read();
 
     if (todos.length === 0) {
@@ -56,7 +56,7 @@ class TodoDb {
     });
   }
 
-  async update(todos: ToDoType[]) {
+  async update(todos: TodoType[]) {
     await updateDoc(this.#docRef, {
       todos,
     });

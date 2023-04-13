@@ -3,8 +3,8 @@ import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import todoDb from '@utils/todoDb';
 import EditButton from '@components/EditButton';
-import AddToDoButton from '@components/AddToDoButton';
-import DeleteToDo from '@components/DeleteToDo';
+import AddTodoButton from '@components/AddTodoButton';
+import DeleteTodo from '@components/DeleteTodo';
 import CompletionConfetti from '@components/CompletionConfetti';
 import UserButton from '@components/UserButton';
 import TodoList from './TodoList';
@@ -13,7 +13,7 @@ import { PageContainer, FlexContainer, Nav } from './style';
 import useAuthState from '@hooks/useAuthState';
 
 const Main = () => {
-  const [todos, setTodos] = useState<ToDoType[]>([]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState<string | null>(null);
@@ -49,9 +49,9 @@ const Main = () => {
           />
 
           {isEditModeOn ? (
-            <DeleteToDo todos={todos} setDeletedId={setDeletedId} />
+            <DeleteTodo todos={todos} setDeletedId={setDeletedId} />
           ) : (
-            <AddToDoButton randomColor={randomColor} />
+            <AddTodoButton randomColor={randomColor} />
           )}
         </FlexContainer>
       </PageContainer>

@@ -2,13 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 import todoDb from '@utils/todoDb';
 import { Container, StyledButton, StyledIcon } from './style';
 
-type AddToDoButtonProps = {
+type AddTodoButtonProps = {
   randomColor: string;
 };
 
-const AddToDoButton = ({ randomColor }: AddToDoButtonProps) => {
+const AddTodoButton = ({ randomColor }: AddTodoButtonProps) => {
   const addNewTodo = () => {
-    const newTodo: ToDoType = {
+    const newTodo: TodoType = {
       id: uuidv4(),
       color: randomColor,
       textValue: '',
@@ -36,4 +36,4 @@ const AddToDoButton = ({ randomColor }: AddToDoButtonProps) => {
   );
 };
 
-export default AddToDoButton;
+export default AddTodoButton;

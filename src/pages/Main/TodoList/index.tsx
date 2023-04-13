@@ -5,12 +5,12 @@ import {
   type DropResult,
 } from 'react-beautiful-dnd';
 import TodoItem from './TodoItem';
-import { ToDoListWrapper } from './style';
+import { TodoListWrapper } from './style';
 import todoDb from '@utils/todoDb';
 
 type TodoListProps = {
-  todos: ToDoType[];
-  setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
+  todos: TodoType[];
+  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
   deletedId: string | null;
   isEditModeOn: boolean;
 };
@@ -22,7 +22,7 @@ const TodoList = ({
   isEditModeOn,
 }: TodoListProps) => {
   const reorder = useCallback(
-    (list: ToDoType[], startIndex: number, endIndex: number | undefined) => {
+    (list: TodoType[], startIndex: number, endIndex: number | undefined) => {
       if (!endIndex) return list;
 
       const result = Array.from(list);
@@ -44,7 +44,7 @@ const TodoList = ({
 
     setTodos(updateTodos);
 
-    function updateTodos(todos: ToDoType[]) {
+    function updateTodos(todos: TodoType[]) {
       const reorderedTodos = reorder(
         todos,
         result.source.index,
@@ -60,7 +60,7 @@ const TodoList = ({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="todo">
         {(provided) => (
-          <ToDoListWrapper ref={provided.innerRef} {...provided.droppableProps}>
+          <TodoListWrapper ref={provided.innerRef} {...provided.droppableProps}>
             {todos.length
               ? todos.map(({ id, color, textValue, isCompleted }, index) => (
                   <TodoItem
@@ -78,7 +78,7 @@ const TodoList = ({
                 ))
               : null}
             {provided.placeholder}
-          </ToDoListWrapper>
+          </TodoListWrapper>
         )}
       </Droppable>
     </DragDropContext>

@@ -1,4 +1,4 @@
-declare type ToDoType = {
+declare type TodoType = {
   id: string;
   color: string;
   textValue: string;
