@@ -26,13 +26,7 @@ const Main = () => {
   const user = useAuthState();
 
   useEffect(() => {
-    if (!user.id) return;
-
-    getTodos();
-
-    async function getTodos() {
-      setTodos(await todoDb.read());
-    }
+    if (user.id) todoDb.listen(setTodos);
   }, [user.id]);
 
   useEffect(() => {
@@ -112,7 +106,7 @@ const Main = () => {
           {isEditModeOn ? (
             <DeleteToDo todos={todos} setDeletedId={setDeletedId} />
           ) : (
-            <AddToDoButton randomColor={randomColor} setTodos={setTodos} />
+            <AddToDoButton randomColor={randomColor} />
           )}
         </FlexContainer>
       </PageContainer>

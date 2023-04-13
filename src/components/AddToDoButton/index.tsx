@@ -1,14 +1,12 @@
-import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import todoDb from '@utils/todoDb';
 import { Container, StyledButton, StyledIcon } from './style';
 
 type AddToDoButtonProps = {
   randomColor: string;
-  setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
 };
 
-const AddToDoButton = ({ randomColor, setTodos }: AddToDoButtonProps) => {
+const AddToDoButton = ({ randomColor }: AddToDoButtonProps) => {
   const addNewTodo = () => {
     const newTodo: ToDoType = {
       id: uuidv4(),
@@ -20,8 +18,6 @@ const AddToDoButton = ({ randomColor, setTodos }: AddToDoButtonProps) => {
     };
 
     todoDb.create(newTodo);
-
-    setTodos((prev) => [...prev, newTodo]);
   };
 
   return (

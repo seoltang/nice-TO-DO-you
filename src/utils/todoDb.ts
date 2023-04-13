@@ -8,6 +8,7 @@ import {
   updateDoc,
   type DocumentReference,
   type DocumentData,
+  onSnapshot,
 } from 'firebase/firestore';
 import { auth, db } from 'src/firebase';
 
@@ -18,6 +19,26 @@ class TodoDb {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.#docRef = doc(db, 'todo', user.uid);
+      }
+    });
+  }
+
+  async read() {
+    const docSnap = await getDoc(this.#docRef);
+
+    if (docSnap.exists()) {
+      const todos = docSnap.data().todos;
+      if (todos) return todos;
+    }
+
+    return [];
+  }
+
+  listen(setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>) {
+    onSnapshot(this.#docRef, (doc) => {
+      if (doc.exists()) {
+        const todos = doc.data().todos;
+        if (todos) setTodos(todos);
       }
     });
   }
@@ -33,17 +54,6 @@ class TodoDb {
     await updateDoc(this.#docRef, {
       todos: arrayUnion(newTodo),
     });
-  }
-
-  async read() {
-    const docSnap = await getDoc(this.#docRef);
-
-    if (docSnap.exists()) {
-      const todos = docSnap.data().todos;
-      if (todos) return todos;
-    }
-
-    return [];
   }
 
   async update() {}
