@@ -33,5 +33,6 @@ export const Handle = styled(motion.span)`
   height: 120px;
   background-color: white;
   border-radius: 50%;
+  font-size: 32px;
   font-weight: bold;
 `;

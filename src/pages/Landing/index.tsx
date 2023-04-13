@@ -25,7 +25,7 @@ const Landing = () => {
     <Wrapper>
       <Switch isOn={isOn} onClick={toggleSwitch}>
         <Handle layout transition={spring}>
-          {isOn ? '로그인' : '로그아웃'}
+          {isOn ? 'ON' : 'OFF'}
         </Handle>
       </Switch>
     </Wrapper>

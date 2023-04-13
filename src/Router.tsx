@@ -10,6 +10,7 @@ function Router() {
         <Route path="/" element={<Main />} />
         <Route path="/start" element={<Landing />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="*" element={<Landing />} />
       </Routes>
     </BrowserRouter>
   );
