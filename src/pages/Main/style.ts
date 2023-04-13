@@ -29,8 +29,3 @@ export const Nav = styled.nav`
   column-gap: 12px;
   width: 100%;
 `;
-
-export const ToDoListWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;

@@ -24,7 +24,7 @@ type ToDoListProps = {
   isEditModeOn: boolean;
 };
 
-const ToDoItem = ({
+const TodoItem = ({
   id,
   index,
   color,
@@ -148,4 +148,4 @@ const ToDoItem = ({
   );
 };
 
-export default ToDoItem;
+export default TodoItem;
