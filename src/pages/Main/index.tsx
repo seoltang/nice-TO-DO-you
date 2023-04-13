@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import {
@@ -7,8 +6,7 @@ import {
   Droppable,
   type DropResult,
 } from 'react-beautiful-dnd';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from 'src/firebase';
+import { getAuth } from 'firebase/auth';
 import ToDoList from '@components/ToDoList';
 import EditButton from '@components/EditButton';
 import AddToDoButton from '@components/AddToDoButton';
@@ -20,36 +18,33 @@ import theme from '@styles/theme';
 import { PageContainer, FlexContainer, ToDoListWrapper, Nav } from './style';
 import userIcon from '@assets/image/logo/user.png';
 
-const Home = () => {
+const Main = () => {
   const [toDos, setToDos] = useState<ToDoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
   const [deletedId, setDeletedId] = useState<number | null>(null);
-  const [user, setUser] = useState({ name: '', imageURL: userIcon });
-
-  const navigate = useNavigate();
+  const [user, setUser] = useState({ id: '', name: '', imageURL: userIcon });
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { displayName, photoURL } = user;
-
-        setUser({
-          name: displayName || '사용자',
-          imageURL: photoURL || userIcon,
-        });
-
-        return;
-      }
-
-      navigate('/login');
-    });
-
     const savedToDos = localStorage.getItem(TODO_KEY_NAME);
     if (savedToDos) {
       setToDos(JSON.parse(savedToDos));
     }
   }, []);
+
+  const { currentUser } = getAuth();
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const { uid, displayName, photoURL } = currentUser;
+
+    setUser({
+      id: uid,
+      name: displayName || '사용자',
+      imageURL: photoURL || userIcon,
+    });
+  }, [currentUser]);
 
   useEffect(() => {
     localStorage.setItem(TODO_KEY_NAME, JSON.stringify(toDos));
@@ -141,4 +136,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Main;

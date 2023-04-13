@@ -13,6 +13,7 @@ const theme = {
     white: '#FFFFFF',
     floralWhite: '#FFFAF0',
     lemonCream: '#faf0ca',
+    custard: '#f8ecb9',
     ink: '#303952',
     tomato: '#FF6347',
     gray: {

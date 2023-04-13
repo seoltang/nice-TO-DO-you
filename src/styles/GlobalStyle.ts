@@ -5,8 +5,8 @@ import theme from './theme';
 const GlobalStyle = createGlobalStyle`
   ${resetStyle}
 
-  #root {
-    pointer-events: auto;
+  :root {
+    --vh: 100%;
   }
 
   * {
@@ -18,6 +18,10 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     font-size: ${theme.listSize}px;
     pointer-events: none;
+  }
+
+  #root {
+    pointer-events: auto;
   }
 `;
 

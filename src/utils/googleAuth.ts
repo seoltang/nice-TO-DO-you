@@ -4,13 +4,12 @@ import {
   getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
-  getAuth,
+  signOut,
   type Auth,
 } from 'firebase/auth';
+import { auth } from 'src/firebase';
 
 export async function logIn(navigate: NavigateFunction) {
-  const auth = getAuth();
-
   onAuthStateChanged(auth, (user) => {
     if (user) {
       navigate('/');
@@ -37,5 +36,14 @@ async function signInGoogle(auth: Auth) {
     }
   } catch (error) {
     console.error(`${error.code}: ${error.message}`);
+  }
+}
+
+export async function logOut(navigate: NavigateFunction) {
+  try {
+    await signOut(auth);
+    navigate('/start');
+  } catch (error) {
+    console.error(error.message);
   }
 }

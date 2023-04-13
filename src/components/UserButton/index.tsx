@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useAnimate } from 'framer-motion';
+import { logOut } from '@utils/googleAuth';
 import { AuthButton, Container, ListWrapper, UserImgButton } from './style';
-import { useAnimate, stagger } from 'framer-motion';
-
-const staggerMenuItems = stagger(0.1, { startDelay: 0.1 });
+import { useNavigate } from 'react-router-dom';
 
 type UserButtonType = {
   imageURL: string;
@@ -10,6 +10,8 @@ type UserButtonType = {
 
 const UserButton = ({ imageURL }: UserButtonType) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const onClick = () => {
     setIsOpen((prev) => !prev);
@@ -23,18 +25,11 @@ const UserButton = ({ imageURL }: UserButtonType) => {
       <ListWrapper isOpen={isOpen}>
         <li>
           <AuthButton
+            onClick={() => logOut(navigate)}
             whileHover={{ backgroundColor: 'rgb(255, 255, 255, 1)' }}
             whileTap={{ scale: 0.95 }}
           >
             로그아웃
-          </AuthButton>
-        </li>
-        <li>
-          <AuthButton
-            whileHover={{ backgroundColor: 'rgb(255, 255, 255, 1)' }}
-            whileTap={{ scale: 0.95 }}
-          >
-            계정 삭제
           </AuthButton>
         </li>
       </ListWrapper>
@@ -58,7 +53,6 @@ function useMenuAnimation(isOpen: boolean) {
 
     animate('li', isOpen ? { opacity: 1 } : { opacity: 0 }, {
       duration: 0.1,
-      delay: isOpen ? staggerMenuItems : 0,
     });
   }, [isOpen]);
 
