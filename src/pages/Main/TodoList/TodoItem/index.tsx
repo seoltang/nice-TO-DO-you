@@ -35,33 +35,50 @@ const TodoItem = ({
   deletedId,
   isEditModeOn,
 }: ToDoListProps) => {
-  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const findIndex = todos.findIndex((todo) => todo.id === id);
-    const updatedToDos = [...todos];
+  const handleCheckbox = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const isCompleted = target.checked;
 
-    if (findIndex !== -1) {
-      updatedToDos[findIndex] = {
-        ...updatedToDos[findIndex],
-        isCompleted: event.target.checked,
-      };
+    updateTodos(todos);
 
-      setTodos(updatedToDos);
-      todoDb.update(updatedToDos);
+    function updateTodos(todos: ToDoType[]) {
+      const findIndex = todos.findIndex((todo) => todo.id === id);
+      const updatedTodos = [...todos];
+
+      if (findIndex !== -1) {
+        updatedTodos[findIndex] = {
+          ...updatedTodos[findIndex],
+          isCompleted,
+        };
+
+        todoDb.update(updatedTodos);
+      }
+
+      return updatedTodos;
     }
   };
 
-  const onInputTextarea = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const findIndex = todos.findIndex((todo) => todo.id === id);
-    const updatedToDos = [...todos];
+  const onInputTextarea = ({
+    currentTarget,
+  }: React.FormEvent<HTMLTextAreaElement>) => {
+    const textValue = currentTarget.value;
 
-    if (findIndex !== -1) {
-      updatedToDos[findIndex] = {
-        ...updatedToDos[findIndex],
-        textValue: event.currentTarget.value,
-      };
+    updateTodos(todos);
+    setTodos(updateTodos);
 
-      setTodos(updatedToDos);
-      todoDb.update(updatedToDos);
+    function updateTodos(todos: ToDoType[]) {
+      const findIndex = todos.findIndex((todo) => todo.id === id);
+      const updatedTodos = [...todos];
+
+      if (findIndex !== -1) {
+        updatedTodos[findIndex] = {
+          ...updatedTodos[findIndex],
+          textValue,
+        };
+
+        todoDb.update(updatedTodos);
+      }
+
+      return updatedTodos;
     }
   };
 
@@ -91,11 +108,7 @@ const TodoItem = ({
   };
 
   return (
-    <Draggable
-      draggableId={`todo-${id}`}
-      index={index}
-      isDragDisabled={!isEditModeOn}
-    >
+    <Draggable draggableId={id} index={index} isDragDisabled={!isEditModeOn}>
       {(provided, snapshot) => (
         <List
           isDragging={isDragging}

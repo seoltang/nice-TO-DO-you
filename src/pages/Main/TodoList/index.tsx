@@ -6,6 +6,7 @@ import {
 } from 'react-beautiful-dnd';
 import TodoItem from './TodoItem';
 import { ToDoListWrapper } from './style';
+import todoDb from '@utils/todoDb';
 
 type TodoListProps = {
   todos: ToDoType[];
@@ -21,7 +22,9 @@ const TodoList = ({
   isEditModeOn,
 }: TodoListProps) => {
   const reorder = useCallback(
-    (list: ToDoType[], startIndex: number, endIndex: number) => {
+    (list: ToDoType[], startIndex: number, endIndex: number | undefined) => {
+      if (!endIndex) return list;
+
       const result = Array.from(list);
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
@@ -32,18 +35,25 @@ const TodoList = ({
 
   const onDragEnd = (result: DropResult) => {
     if (deletedId === result.draggableId) {
-      setTodos((prevtoDos) =>
-        [...prevtoDos].filter((ele) => ele.id !== deletedId)
-      );
+      setTodos((prev) => [...prev].filter((ele) => ele.id !== deletedId));
       return;
     }
 
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
 
-    setTodos((prevtoDos) =>
-      reorder(prevtoDos, result.source.index, result.destination!.index)
-    );
+    setTodos(updateTodos);
+
+    function updateTodos(todos: ToDoType[]) {
+      const reorderedTodos = reorder(
+        todos,
+        result.source.index,
+        result.destination?.index
+      );
+
+      todoDb.update(reorderedTodos);
+      return reorderedTodos;
+    }
   };
 
   return (
