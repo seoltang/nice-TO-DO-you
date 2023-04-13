@@ -1,6 +1,7 @@
 import React from 'react';
 import { Draggable, type DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
+import todoDb from '@utils/todoDb';
 import { ItemTypes } from '@constants/todo';
 import {
   List,
@@ -35,30 +36,32 @@ const ToDoItem = ({
   isEditModeOn,
 }: ToDoListProps) => {
   const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const findIndex = todos.findIndex((toDo) => toDo.id === id);
-    const copyToDos = [...todos];
+    const findIndex = todos.findIndex((todo) => todo.id === id);
+    const updatedToDos = [...todos];
 
     if (findIndex !== -1) {
-      copyToDos[findIndex] = {
-        ...copyToDos[findIndex],
+      updatedToDos[findIndex] = {
+        ...updatedToDos[findIndex],
         isCompleted: event.target.checked,
       };
 
-      setTodos(copyToDos);
+      setTodos(updatedToDos);
+      todoDb.update(updatedToDos);
     }
   };
 
-  const saveTextValue = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const findIndex = todos.findIndex((toDo) => toDo.id === id);
-    const copyToDos = [...todos];
+  const onInputTextarea = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const findIndex = todos.findIndex((todo) => todo.id === id);
+    const updatedToDos = [...todos];
 
     if (findIndex !== -1) {
-      copyToDos[findIndex] = {
-        ...copyToDos[findIndex],
+      updatedToDos[findIndex] = {
+        ...updatedToDos[findIndex],
         textValue: event.currentTarget.value,
       };
 
-      setTodos(copyToDos);
+      setTodos(updatedToDos);
+      todoDb.update(updatedToDos);
     }
   };
 
@@ -87,7 +90,7 @@ const ToDoItem = ({
     return style;
   };
 
-  return Number.isInteger(index) ? (
+  return (
     <Draggable
       draggableId={`todo-${id}`}
       index={index}
@@ -134,7 +137,7 @@ const ToDoItem = ({
 
           <StyledTextareaAutosize
             autoComplete="off"
-            onInput={saveTextValue}
+            onInput={onInputTextarea}
             value={textValue}
             $isCompleted={isCompleted}
             $color={color}
@@ -142,7 +145,7 @@ const ToDoItem = ({
         </List>
       )}
     </Draggable>
-  ) : null;
+  );
 };
 
 export default ToDoItem;

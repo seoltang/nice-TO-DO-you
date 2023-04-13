@@ -56,13 +56,17 @@ class TodoDb {
     });
   }
 
-  async update() {}
+  async update(todos: ToDoType[]) {
+    await updateDoc(this.#docRef, {
+      todos,
+    });
+  }
 
   async delete(id: string) {
     const todos = this.read();
     if (!Array.isArray(todos)) return;
 
-    const deletedTodo = todos.find((todo) => (todo.id = id));
+    const deletedTodo = todos.find((todo) => todo.id === id);
 
     if (deletedTodo) {
       await updateDoc(this.#docRef, {
