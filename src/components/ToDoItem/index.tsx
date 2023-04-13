@@ -12,31 +12,31 @@ import {
 } from './style';
 
 type ToDoListProps = {
-  id: number;
+  id: string;
   index: number;
   color: string;
   textValue: string;
   isCompleted: boolean;
-  setToDos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
-  toDos: ToDoType[];
-  deletedId: number | null;
+  setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
+  todos: ToDoType[];
+  deletedId: string | null;
   isEditModeOn: boolean;
 };
 
-const ToDoList = ({
+const ToDoItem = ({
   id,
   index,
   color,
   textValue,
   isCompleted,
-  setToDos,
-  toDos,
+  setTodos,
+  todos,
   deletedId,
   isEditModeOn,
 }: ToDoListProps) => {
   const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const findIndex = toDos.findIndex((toDo) => toDo.id === id);
-    const copyToDos = [...toDos];
+    const findIndex = todos.findIndex((toDo) => toDo.id === id);
+    const copyToDos = [...todos];
 
     if (findIndex !== -1) {
       copyToDos[findIndex] = {
@@ -44,13 +44,13 @@ const ToDoList = ({
         isCompleted: event.target.checked,
       };
 
-      setToDos(copyToDos);
+      setTodos(copyToDos);
     }
   };
 
   const saveTextValue = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const findIndex = toDos.findIndex((toDo) => toDo.id === id);
-    const copyToDos = [...toDos];
+    const findIndex = todos.findIndex((toDo) => toDo.id === id);
+    const copyToDos = [...todos];
 
     if (findIndex !== -1) {
       copyToDos[findIndex] = {
@@ -58,7 +58,7 @@ const ToDoList = ({
         textValue: event.currentTarget.value,
       };
 
-      setToDos(copyToDos);
+      setTodos(copyToDos);
     }
   };
 
@@ -73,7 +73,7 @@ const ToDoList = ({
   const preventDeleteAnimation = (
     style: React.CSSProperties | undefined,
     snapshot: DraggableStateSnapshot,
-    id: number
+    id: string
   ) => {
     if (snapshot.isDropAnimating && id === deletedId) {
       const { moveTo } = snapshot.dropAnimation!;
@@ -145,4 +145,4 @@ const ToDoList = ({
   ) : null;
 };
 
-export default ToDoList;
+export default ToDoItem;

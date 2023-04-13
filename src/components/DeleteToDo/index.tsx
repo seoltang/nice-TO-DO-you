@@ -5,11 +5,11 @@ import theme from '@styles/theme';
 import { Container, TrashCan } from './style';
 
 type DeleteToDoProps = {
-  toDos: ToDoType[];
-  setDeletedId: React.Dispatch<React.SetStateAction<number | null>>;
+  todos: ToDoType[];
+  setDeletedId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const DeleteToDo = ({ toDos, setDeletedId }: DeleteToDoProps) => {
+const DeleteToDo = ({ todos, setDeletedId }: DeleteToDoProps) => {
   const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
     accept: ItemTypes.TODO,
     drop: ({ id }) => {
@@ -17,14 +17,14 @@ const DeleteToDo = ({ toDos, setDeletedId }: DeleteToDoProps) => {
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      id: (monitor.getItem() as { id: number })?.id,
+      id: (monitor.getItem() as { id: string })?.id,
       canDrop: monitor.canDrop(),
     }),
   }));
 
-  const getTrashCanColor = (isOver: boolean, draggingId: number) => {
+  const getTrashCanColor = (isOver: boolean, draggingId: string) => {
     const { isCompleted, color } =
-      toDos.find((ele) => ele.id === draggingId) || {};
+      todos.find((ele) => ele.id === draggingId) || {};
 
     let colorStyles = { backgroundColor: '', fontColor: '' };
     if (isOver && isCompleted && color) {

@@ -6,57 +6,42 @@ import {
   Droppable,
   type DropResult,
 } from 'react-beautiful-dnd';
-import { getAuth } from 'firebase/auth';
-import ToDoList from '@components/ToDoList';
+import todoDb from '@utils/todoDb';
+import ToDoItem from '@components/ToDoItem';
 import EditButton from '@components/EditButton';
 import AddToDoButton from '@components/AddToDoButton';
 import DeleteToDo from '@components/DeleteToDo';
 import CompletionConfetti from '@components/CompletionConfetti';
 import UserButton from '@components/UserButton';
-import { TODO_KEY_NAME } from '@constants/todo';
 import theme from '@styles/theme';
 import { PageContainer, FlexContainer, ToDoListWrapper, Nav } from './style';
-import userIcon from '@assets/image/logo/user.png';
+import useAuthState from '@hooks/useAuthState';
 
 const Main = () => {
-  const [toDos, setToDos] = useState<ToDoType[]>([]);
+  const [todos, setTodos] = useState<ToDoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
-  const [deletedId, setDeletedId] = useState<number | null>(null);
-  const [user, setUser] = useState({ id: '', name: '', imageURL: userIcon });
+  const [deletedId, setDeletedId] = useState<string | null>(null);
+
+  const user = useAuthState();
 
   useEffect(() => {
-    const savedToDos = localStorage.getItem(TODO_KEY_NAME);
-    if (savedToDos) {
-      setToDos(JSON.parse(savedToDos));
+    if (!user.id) return;
+
+    getTodos();
+
+    async function getTodos() {
+      setTodos(await todoDb.read());
     }
-  }, []);
-
-  const { currentUser } = getAuth();
-
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const { uid, displayName, photoURL } = currentUser;
-
-    setUser({
-      id: uid,
-      name: displayName || '사용자',
-      imageURL: photoURL || userIcon,
-    });
-  }, [currentUser]);
-
-  useEffect(() => {
-    localStorage.setItem(TODO_KEY_NAME, JSON.stringify(toDos));
-  }, [toDos]);
+  }, [user.id]);
 
   useEffect(() => {
     const colorValues = Object.values(theme.color.random);
     setRandomColor(colorValues[Math.floor(Math.random() * colorValues.length)]);
-  }, [toDos.length]);
+  }, [todos.length]);
 
   const isAllCompleted =
-    toDos.length && toDos.map((ele) => ele.isCompleted).every((ele) => ele);
+    todos.length && todos.map((ele) => ele.isCompleted).every((ele) => ele);
 
   const reorder = useCallback(
     (list: ToDoType[], startIndex: number, endIndex: number) => {
@@ -69,8 +54,8 @@ const Main = () => {
   );
 
   const onDragEnd = (result: DropResult) => {
-    if (deletedId === +result.draggableId) {
-      setToDos((prevtoDos) =>
+    if (deletedId === result.draggableId) {
+      setTodos((prevtoDos) =>
         [...prevtoDos].filter((ele) => ele.id !== deletedId)
       );
       return;
@@ -79,7 +64,7 @@ const Main = () => {
     if (!result.destination) return;
     if (result.destination.index === result.source.index) return;
 
-    setToDos((prevtoDos) =>
+    setTodos((prevtoDos) =>
       reorder(prevtoDos, result.source.index, result.destination!.index)
     );
   };
@@ -100,18 +85,18 @@ const Main = () => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {toDos.length
-                    ? toDos.map(
+                  {todos.length
+                    ? todos.map(
                         ({ id, color, textValue, isCompleted }, index) => (
-                          <ToDoList
+                          <ToDoItem
                             key={id}
                             id={id}
                             index={index}
                             color={color}
                             textValue={textValue}
                             isCompleted={isCompleted}
-                            setToDos={setToDos}
-                            toDos={toDos}
+                            todos={todos}
+                            setTodos={setTodos}
                             deletedId={deletedId}
                             isEditModeOn={isEditModeOn}
                           />
@@ -125,9 +110,9 @@ const Main = () => {
           </DragDropContext>
 
           {isEditModeOn ? (
-            <DeleteToDo toDos={toDos} setDeletedId={setDeletedId} />
+            <DeleteToDo todos={todos} setDeletedId={setDeletedId} />
           ) : (
-            <AddToDoButton randomColor={randomColor} setToDos={setToDos} />
+            <AddToDoButton randomColor={randomColor} setTodos={setTodos} />
           )}
         </FlexContainer>
       </PageContainer>
