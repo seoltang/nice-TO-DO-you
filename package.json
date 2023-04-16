@@ -11,7 +11,7 @@
     "@types/react": "^18.0.34",
     "@types/react-dom": "^18.0.11",
     "firebase": "^9.19.1",
-    "firebase-tools": "^11.26.0",
+    "firebase-tools": "^11.27.0",
     "framer-motion": "^10.11.6",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -28,8 +28,8 @@
     "web-vitals": "^3.1.1"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "serve": "vite preview"
   },
   "eslintConfig": {
