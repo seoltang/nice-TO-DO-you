@@ -76,6 +76,7 @@ const TodoItem = ({
         updatedTodos[findIndex] = {
           ...updatedTodos[findIndex],
           textValue,
+          lastEditedAt: Date.now(),
         };
 
         todoDb.update(updatedTodos);
