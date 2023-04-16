@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -11,19 +11,15 @@ import todoDb from '@utils/todoDb';
 type TodoListProps = {
   todos: TodoType[];
   setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
-  deletedId: string | null;
   isEditModeOn: boolean;
 };
 
-const TodoList = ({
-  todos,
-  setTodos,
-  deletedId,
-  isEditModeOn,
-}: TodoListProps) => {
+const TodoList = ({ todos, setTodos, isEditModeOn }: TodoListProps) => {
+  const [deletedId, setDeletedId] = useState('');
+
   const reorder = useCallback(
     (list: TodoType[], startIndex: number, endIndex: number | undefined) => {
-      if (!endIndex) return list;
+      if (endIndex === undefined) return list;
 
       const result = Array.from(list);
       const [removed] = result.splice(startIndex, 1);
@@ -35,7 +31,7 @@ const TodoList = ({
 
   const onDragEnd = (result: DropResult) => {
     if (deletedId === result.draggableId) {
-      setTodos((prev) => [...prev].filter((ele) => ele.id !== deletedId));
+      todoDb.delete(deletedId);
       return;
     }
 
@@ -73,6 +69,7 @@ const TodoList = ({
                     todos={todos}
                     setTodos={setTodos}
                     deletedId={deletedId}
+                    setDeletedId={setDeletedId}
                     isEditModeOn={isEditModeOn}
                   />
                 ))

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import todoDb from '@utils/todoDb';
 import EditButton from '@components/EditButton';
 import AddTodoButton from '@components/AddTodoButton';
-import DeleteTodo from '@components/DeleteTodo';
+import DeleteTodoArea from '@components/DeleteTodoArea';
 import CompletionConfetti from '@components/CompletionConfetti';
 import UserButton from '@components/UserButton';
 import TodoList from './TodoList';
@@ -16,8 +16,6 @@ const Main = () => {
   const [todos, setTodos] = useState<TodoType[]>([]);
   const [randomColor, setRandomColor] = useState('');
   const [isEditModeOn, setisEditModeOn] = useState(false);
-  const [deletedId, setDeletedId] = useState<string | null>(null);
-
   const user = useAuthState();
 
   useEffect(() => {
@@ -44,12 +42,11 @@ const Main = () => {
           <TodoList
             todos={todos}
             setTodos={setTodos}
-            deletedId={deletedId}
             isEditModeOn={isEditModeOn}
           />
 
           {isEditModeOn ? (
-            <DeleteTodo todos={todos} setDeletedId={setDeletedId} />
+            <DeleteTodoArea todos={todos} />
           ) : (
             <AddTodoButton randomColor={randomColor} />
           )}

@@ -63,10 +63,9 @@ class TodoDb {
   }
 
   async delete(id: string) {
-    const todos = this.read();
-    if (!Array.isArray(todos)) return;
+    const todos = await this.read();
 
-    const deletedTodo = todos.find((todo) => todo.id === id);
+    const deletedTodo = todos.find((todo: TodoType) => todo.id === id);
 
     if (deletedTodo) {
       await updateDoc(this.#docRef, {

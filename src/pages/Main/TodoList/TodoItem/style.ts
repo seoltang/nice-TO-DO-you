@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import TextareaAutosize from 'react-textarea-autosize';
 
-type ListProps = {
-  isDragging: boolean;
-};
-
 type StyledCheckboxProps = {
   isCompleted: boolean;
   isEditModeOn: boolean;
@@ -15,7 +11,7 @@ type StyledTextareaAutosizeProps = {
   $color: string;
 };
 
-export const List = styled.li<ListProps>`
+export const List = styled.li`
   ${({ theme }) => theme.flexCustom('row', 'flex-start')}
   margin-bottom: 12px;
   list-style: none;

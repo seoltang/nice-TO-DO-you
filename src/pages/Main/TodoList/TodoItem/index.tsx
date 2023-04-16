@@ -1,8 +1,9 @@
 import React from 'react';
-import { Draggable, type DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { Draggable, type DropResult } from 'react-beautiful-dnd';
 import { useDrag } from 'react-dnd';
 import todoDb from '@utils/todoDb';
-import { ItemTypes } from '@constants/todo';
+import preventDeleteAnimation from '@utils/preventDeleteAnimation';
+import { DND_ITEM_TYPE } from '@constants/todo';
 import {
   List,
   CheckboxWrapper,
@@ -19,8 +20,9 @@ type TodoListProps = {
   textValue: string;
   isCompleted: boolean;
   setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
+  deletedId: string;
+  setDeletedId: React.Dispatch<React.SetStateAction<string>>;
   todos: TodoType[];
-  deletedId: string | null;
   isEditModeOn: boolean;
 };
 
@@ -31,8 +33,9 @@ const TodoItem = ({
   textValue,
   isCompleted,
   setTodos,
-  todos,
   deletedId,
+  setDeletedId,
+  todos,
   isEditModeOn,
 }: TodoListProps) => {
   const handleCheckbox = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,43 +85,33 @@ const TodoItem = ({
     }
   };
 
-  const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: ItemTypes.TODO,
+  const [_, dragRef] = useDrag(() => ({
+    type: DND_ITEM_TYPE.todo,
     item: { id },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult<DropResult>() as {
+        isDeleted: boolean;
+      } | null;
+
+      if (item.id && dropResult?.isDeleted) {
+        setDeletedId(id);
+      }
+    },
   }));
 
-  const preventDeleteAnimation = (
-    style: React.CSSProperties | undefined,
-    snapshot: DraggableStateSnapshot,
-    id: string
-  ) => {
-    if (snapshot.isDropAnimating && id === deletedId) {
-      const { moveTo } = snapshot.dropAnimation!;
-      return {
-        ...style,
-        transform: `translate(${moveTo.x}px, ${moveTo.y}px)`,
-        transitionDuration: '0.000001s',
-        visibility: 'hidden',
-      } as React.CSSProperties;
-    }
-    return style;
-  };
+  const isDeleted = id === deletedId;
 
   return (
     <Draggable draggableId={id} index={index} isDragDisabled={!isEditModeOn}>
       {(provided, snapshot) => (
         <List
-          isDragging={isDragging}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={preventDeleteAnimation(
             provided.draggableProps.style,
             snapshot,
-            id
+            isDeleted
           )}
         >
           {isEditModeOn ? (

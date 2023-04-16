@@ -1,20 +1,16 @@
-import React from 'react';
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from '@constants/todo';
+import { DND_ITEM_TYPE } from '@constants/todo';
 import theme from '@styles/theme';
 import { Container, TrashCan } from './style';
 
-type DeleteTodoProps = {
+type DeleteTodoAreaProps = {
   todos: TodoType[];
-  setDeletedId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const DeleteTodo = ({ todos, setDeletedId }: DeleteTodoProps) => {
+const DeleteTodoArea = ({ todos }: DeleteTodoAreaProps) => {
   const [{ isOver, id, canDrop }, dropRef] = useDrop(() => ({
-    accept: ItemTypes.TODO,
-    drop: ({ id }) => {
-      setDeletedId(id);
-    },
+    accept: DND_ITEM_TYPE.todo,
+    drop: () => ({ isDeleted: true }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       id: (monitor.getItem() as { id: string } | null)?.id,
@@ -56,4 +52,4 @@ const DeleteTodo = ({ todos, setDeletedId }: DeleteTodoProps) => {
   ) : null;
 };
 
-export default DeleteTodo;
+export default DeleteTodoArea;
