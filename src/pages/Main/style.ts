@@ -25,7 +25,7 @@ export const FlexContainer = styled.div`
 `;
 
 export const Nav = styled.nav`
-  ${({ theme }) => theme.flexCustom('row', 'baseline', 'flex-end')}
+  ${({ theme }) => theme.flexCustom('row', 'center', 'flex-end')}
   column-gap: 12px;
   width: 100%;
 `;
